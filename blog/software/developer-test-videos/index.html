@@ -1,0 +1,36 @@
+<h1>Developer testing</h1>
+Below I have colleded a number of videos that in my opinion gives some good insights on how to do testing.
+<br />
+
+<h3>TDD, Where Did It All Go Wrong - by Ian Cooper</h3>
+Talks about how most do testing and why TDD to some has a bad reputation <br />
+Tells how TDD should in fact be practiced <br />
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EZ05e7EMOLM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
+Main takaways: <br />
+<ul>
+    <li>tests that is tighly coupled to implementation will break too often thus becomming frustrating</li>
+    <li>a unit is not a single class ot method, it is a module with a defined interface, that will rarely change</li>
+    <li>the module should be seen as a black box so testing should only be on input and output</li>
+    <li>the internal of the module is implementation details that should be allowed to change frequently</li>
+    <li>test should focus on behaviour instead of data</li>
+    <li>TDD is basically the same as BDD</li>
+</ul>  
+<br />
+
+<h3>Building Operable Software with TDD (but not the way you think) - by Martin Thwaites</h3>
+Suggests testing from the outside in, starting with the public API, either HTTP API or a SDK API<br />
+<iframe width="560" height="315" src="https://www.youtube.com/embed/prLRI3VEVq4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
+Main takaways: <br />
+<ul>
+    <li>yes tests can include database and other infrastructure calls, and it can still be very fast </li>
+    <li>by testing from the public API you do not couple the tests to implementation or infrastructure, so that can still change</li>
+    <li>endpoint paths, routing, dependency injection are all automatically tested </li>
+    <li>actually you get 100% coverage, if code is not covered, you are either missing a test or you have dead code </li>
+    <li>some stuff can not be verified through API, but by including tracing it can be done</li>
+</ul>  
+<br />
+
+
+
+
+

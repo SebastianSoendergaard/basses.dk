@@ -1,48 +1,62 @@
+<h1>Application architecture</h1>
+Below I have colleded a number of videos that in my opinion sums up a lot of the stuff needed for a good application architecture.
+<br />
 
 <h3>Clean Architecture - by Robert C. Martin (Uncle Bob)</h3>
 Very good talk on the thoughts behind Clean Architectures (including Hexagonal and Onion) <br />
 If you know Uncle Bob you can just skip the first 10.5 minutes as they are not relevant at all. <br />
 <iframe width="560" height="315" src="https://www.youtube.com/embed/o_TH-Y78tt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
 Main takaways: <br />
-- dependencies - make sure they point the right way. Always inwards, your application should never depend on the outside <br />
-- frameworks, databases, internet ect. are just details and you should always decouple your application from it <br />
-- screaming architecture, structure the application so it shows what it does instead of showing it is just another asp.net solution <br />
-- business rules can be devided in two: domain rules, and application rules <br />
-- domain rules are rules that always exists in the business e.g. calculation of interests in a bank, they should be in the domain layer <br />
-- application rules are rules that exists because of the application, they should be in the application layer <br />
+<ul>
+    <li>dependencies - make sure they point the right way. Always inwards, your application should never depend on the outside</li>
+    <li>frameworks, databases, internet ect. are just details and you should always decouple your application from it</li>
+    <li>creaming architecture, structure the application so it shows what it does instead of showing it is just another asp.net solution</li>
+    <li>business rules can be devided in two: domain rules, and application rules</li>
+    <ul>
+        <li>domain rules are rules that always exists in the business e.g. calculation of interests in a bank, they should be in the domain layer</li>
+        <li>application rules are rules that exists because of the application, they should be in the application layer</li>
+    </ul>
+</ul>  
 <br />
 
 <h3>Vertical Slice Architecture - by Jimmy Bogard</h3>
 Jimmy proposes an alternative to the layered architecture by splitting in verticals instead <br />
 <iframe width="560" height="315" src="https://www.youtube.com/embed/5kOzZz2vj2o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
 Main takeaways: <br />
-- prioritize high cohesion over layers <br />
-- do not put all business logic in large horizontal services but split into small individual chunks<br />
-<br />
+<ul>
+    <li>prioritize high cohesion over layers</li>
+    <li>do not put all business logic in large horizontal services but split into small feature specific chunks</li>
+</ul>
 
-<h3>Personal comments</h3>
-- Vertical Slice Architecture works very well as it separates features and use cases into small decoupled chunks. It is posible to implement in parallel. It is easy to test. <br />
-- I have seen this architecture beeing used as a excuse for not using DDD and other good principles. That is wrong! Jimmy barely mentiones it in this video but we should still be using domain objects. See his video below on how to refactor a vertical slice handler. <br /> 
-- Also just because we structure the files differently the thoughts behind is still very relevant, in fact Uncle Bob suggests that the application layer should be split into use cases which is the same as Jimmys Bogards slices. Also see the video below with Derek Comartin for how to combine the thoughts behind both approches. <br />
-<br />
-
-<h3>Domain-Driven Refactoring - by Jimmy Bogard</h3>
-See how domian rules are pushed down into the domain objects even when used in Vertical Slice Architecture where each feature is separated from each other <br />
-<iframe width="560" height="315" src="https://www.youtube.com/embed/f64tZ90Dntg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
-Main takeaways: <br />
-- Vertical Slice Architecture is not an excuse to for using rich domain objects that is shared between features <br />
-- Vertical Slice Architecture is not an excuse to have a lot of cluttered  code with dependencies pointing in all directions <br />
-- how domain logic can be identified and moved to the domain objects <br />
+<b>Personal comments</b>
+<ul>
+    <li>Vertical Slice Architecture works very well as it separates features and use cases into small decoupled chunks. It is posible to implement in parallel. It is easy to test.</li>
+    <li>Just because we structure the files differently the thoughts behind clean architectures are still very relevant, in fact Uncle Bob suggests that the application layer should be split into use cases which is the same as Jimmys Bogards slices. Also see the video below with Derek Comartin for how to combine the thoughts behind both approches.</li>
+    <li>I have seen this architecture beeing used as a excuse for not using DDD and other good principles. That is wrong! Jimmy barely mentiones it in this video but we should still be using domain objects. See his video below on how to refactor a vertical slice handler.</li>
+</ul>
 <br />
 
 <h3>Tired of Layers? Vertical Slice Architecture to the rescue! - by Derek Comartin</h3>
 Derek suggests how to use a vertical sliced approch still keeping all the good parts from clean architectures in mind <br />
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lsddiYwWaOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
 Main takeaways: <br />
-- Vertical Slice Architecture is not an excuse to for using rich domain objects that is shared between features <br />
-- Vertical Slice Architecture is not an excuse to have a lot of cluttered  code with dependencies pointing in all directions <br />
-- how domain logic can be identified and moved to the domain objects <br />
+<ul>
+    <li>basically the same as Jimmy Bogard mentiones in his video but in a bit more varied view </li>
+</ul>
 <br />
+
+<h3>Domain-Driven Refactoring - by Jimmy Bogard</h3>
+See how domian rules are pushed down into the domain objects even when used in Vertical Slice Architecture where each feature is separated from each other <br />
+<iframe width="560" height="315" src="https://www.youtube.com/embed/f64tZ90Dntg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><br />
+Main takeaways: <br />
+<ul>
+    <li>vertical Slice Architecture is not an excuse to for using rich domain objects that is shared between features</li>
+    <li>vertical Slice Architecture is not an excuse to have a lot of cluttered  code with dependencies pointing in all directions</li>
+    <li>how domain logic can be identified and moved to the domain objects</li>
+</ul>
+<br />
+
+
 
 
 
