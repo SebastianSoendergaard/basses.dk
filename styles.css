@@ -1,0 +1,23 @@
+html {
+	background-color: dimgray;
+}
+
+body {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	/* bring your own prefixes */
+	transform: translate(-50%, -50%);
+	
+	font-family: monospace;
+}
+
+h1 {
+	color: white;
+    letter-spacing: 30px;
+    font-size: 100px;
+}
+
+p {
+	display: inline;
+}
