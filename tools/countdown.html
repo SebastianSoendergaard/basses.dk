@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequential Timer Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-start {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-pause {
+            background-color: #f39c12;
+            color: white;
+        }
+        .btn-reset {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-add {
+            background-color: #3498db;
+            color: white;
+        }
+        .timers-list {
+            margin-top: 20px;
+        }
+        .timer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .timer-item input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .timer-item .time-display {
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        .timer-item .active {
+            color: #4CAF50;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .loops-control {
+            margin-top: 15px;
+        }
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sequential Timer</h1>
+        
+        <div class="input-group">
+            <label for="new-timer">Add New Timer (seconds):</label>
+            <div style="display: flex;">
+                <input type="number" id="new-timer" min="1" value="10">
+                <button class="btn-add" onclick="addTimer()">Add Timer</button>
+            </div>
+        </div>
+        
+        <div class="input-group loops-control">
+            <label for="loops">Number of Loops:</label>
+            <input type="number" id="loops" min="1" value="1">
+        </div>
+        
+        <div class="timers-list" id="timers-list">
+            <!-- Timers will be added here -->
+        </div>
+        
+        <div class="controls">
+            <button class="btn-start" onclick="startTimers()">Start</button>
+            <button class="btn-pause" onclick="pauseTimers()">Pause</button>
+            <button class="btn-reset" onclick="resetTimers()">Reset</button>
+        </div>
+        
+        <div class="status" id="status">Ready</div>
+    </div>
+
+    <script>
+        let timers = [];
+        let currentTimerIndex = 0;
+        let currentLoop = 0;
+        let totalLoops = 1;
+        let isRunning = false;
+        let isPaused = false;
+        let intervalId = null;
+        let remainingTimes = [];
+        let audioCtx = null;
+        let beepSound = null;
+
+        // Initialize audio context for beeps
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Create a beep sound
+        function playBeep(duration) {
+            if (!audioCtx) initAudio();
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800;
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        // Add a new timer
+        function addTimer() {
+            const input = document.getElementById('new-timer');
+            const time = parseInt(input.value) || 10;
+            
+            if (time <= 0) {
+                alert('Please enter a valid time (greater than 0)');
+                return;
+            }
+            
+            timers.push(time);
+            remainingTimes.push(time);
+            
+            updateTimersList();
+            input.value = '10';
+        }
+
+        // Remove a timer
+        function removeTimer(index) {
+            timers.splice(index, 1);
+            remainingTimes.splice(index, 1);
+            
+            if (currentTimerIndex >= index) {
+                currentTimerIndex--;
+            }
+            
+            updateTimersList();
+        }
+
+        // Update the timers list display
+        function updateTimersList() {
+            const list = document.getElementById('timers-list');
+            list.innerHTML = '';
+            
+            timers.forEach((time, index) => {
+                const timerItem = document.createElement('div');
+                timerItem.className = 'timer-item';
+                
+                const timeDisplay = document.createElement('span');
+                timeDisplay.className = 'time-display';
+                timeDisplay.textContent = formatTime(remainingTimes[index] || time);
+                
+                if (index === currentTimerIndex && isRunning && !isPaused) {
+                    timeDisplay.classList.add('active');
+                }
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '1';
+                input.value = time;
+                input.addEventListener('change', () => {
+                    const newTime = parseInt(input.value) || 1;
+                    timers[index] = newTime;
+                    if (!isRunning) {
+                        remainingTimes[index] = newTime;
+                    }
+                });
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.style.backgroundColor = '#e74c3c';
+                removeBtn.style.color = 'white';
+                removeBtn.style.padding = '5px 10px';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '4px';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.onclick = () => removeTimer(index);
+                
+                timerItem.appendChild(input);
+                timerItem.appendChild(timeDisplay);
+                timerItem.appendChild(removeBtn);
+                
+                list.appendChild(timerItem);
+            });
+        }
+
+        // Format time in MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Start the timers
+        function startTimers() {
+            if (timers.length === 0) {
+                alert('Please add at least one timer');
+                return;
+            }
+            
+            const loopsInput = document.getElementById('loops');
+            totalLoops = parseInt(loopsInput.value) || 1;
+            
+            if (isRunning && !isPaused) return;
+            
+            if (isPaused) {
+                isPaused = false;
+                document.getElementById('status').textContent = 'Running...';
+                return;
+            }
+            
+            isRunning = true;
+            isPaused = false;
+            currentLoop = 0;
+            currentTimerIndex = 0;
+            
+            // Initialize remaining times if not already set
+            if (remainingTimes.length !== timers.length) {
+                remainingTimes = [...timers];
+            }
+            
+            document.getElementById('status').textContent = `Running... (Loop ${currentLoop + 1}/${totalLoops})`;
+            updateTimersList();
+            
+            intervalId = setInterval(() => {
+                if (isPaused) return;
+                
+                // Decrement current timer
+                remainingTimes[currentTimerIndex]--;
+                
+                // Check if time is up for current timer
+                if (remainingTimes[currentTimerIndex] <= 0) {
+                    playBeep(1.0); // Long beep for time up
+                    
+                    // Move to next timer
+                    currentTimerIndex++;
+                    
+                    // Check if all timers in current loop are done
+                    if (currentTimerIndex >= timers.length) {
+                        currentTimerIndex = 0;
+                        currentLoop++;
+                        
+                        // Check if all loops are done
+                        if (currentLoop >= totalLoops) {
+                            clearInterval(intervalId);
+                            isRunning = false;
+                            document.getElementById('status').textContent = 'All loops completed!';
+                            return;
+                        }
+                        
+                        // Reset remaining times for next loop
+                        remainingTimes = [...timers];
+                        document.getElementById('status').textContent = `Running... (Loop ${currentLoop + 1}/${totalLoops})`;
+                    }
+                } else if (remainingTimes[currentTimerIndex] <= 5) {
+                    playBeep(0.2); // Short beep for last 5 seconds
+                }
+                
+                updateTimersList();
+            }, 1000);
+        }
+
+        // Pause the timers
+        function pauseTimers() {
+            if (!isRunning) return;
+            
+            isPaused = true;
+            clearInterval(intervalId);
+            document.getElementById('status').textContent = 'Paused';
+        }
+
+        // Reset the timers
+        function resetTimers() {
+            clearInterval(intervalId);
+            isRunning = false;
+            isPaused = false;
+            currentTimerIndex = 0;
+            currentLoop = 0;
+            remainingTimes = [...timers];
+            document.getElementById('status').textContent = 'Ready';
+            updateTimersList();
+        }
+
+        // Initialize with one timer
+        window.onload = function() {
+            timers.push(10);
+            remainingTimes.push(10);
+            updateTimersList();
+        };
+    </script>
+</body>
+</html>
