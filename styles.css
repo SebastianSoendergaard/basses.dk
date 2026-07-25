@@ -6,7 +6,6 @@ body {
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	/* bring your own prefixes */
 	transform: translate(-50%, -50%);
 	
 	font-family: monospace;
@@ -20,4 +19,17 @@ h1 {
 
 p {
 	display: inline;
+}
+
+a {
+    color: darkgrey;
+    font-weight: bold;
+}
+
+a:hover {
+	color: lightgrey;
+}
+
+.content {
+	font-size: 20px;
 }
