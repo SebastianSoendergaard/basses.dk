@@ -331,6 +331,7 @@ Features:
         let isRunning = false;
         let isPaused = false;
         let intervalId = null;
+        let autoResetTimeoutId = null;
         let remainingTimes = [];
         let audioCtx = null;
 
@@ -526,6 +527,9 @@ Features:
             totalLoops = parseInt(loopsInput.value) || 1;
             
             if (isRunning && !isPaused) return;
+
+            clearTimeout(autoResetTimeoutId);
+            initAudio();
             
             if (isPaused) {
                 isPaused = false;
@@ -580,7 +584,7 @@ Features:
                         releaseWakeLock();
                         // Delay fanfare until long beep is over, then auto-reset after fanfare finishes
                         setTimeout(playCompletionFanfare, 1000);
-                        setTimeout(resetTimers, 1000 + 800);
+                        autoResetTimeoutId = setTimeout(resetTimers, 1000 + 800);
                         return;
                     }
 
@@ -615,6 +619,7 @@ Features:
         // Reset the timers
         function resetTimers() {
             clearInterval(intervalId);
+            clearTimeout(autoResetTimeoutId);
             isRunning = false;
             isPaused = false;
             currentTimerIndex = 0;
