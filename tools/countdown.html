@@ -578,8 +578,9 @@ Features:
                         document.getElementById('active-loop').textContent = '';
                         document.getElementById('status').textContent = 'All loops completed!';
                         releaseWakeLock();
-                        // Delay fanfare until long beep is over
+                        // Delay fanfare until long beep is over, then auto-reset after fanfare finishes
                         setTimeout(playCompletionFanfare, 1000);
+                        setTimeout(resetTimers, 1000 + 800);
                         return;
                     }
 
