@@ -466,31 +466,7 @@ Features:
             if (isPaused) {
                 isPaused = false;
                 document.getElementById('status').textContent = '';
-                intervalId = setInterval(() => {
-                    if (isPaused) return;
-                    remainingTimes[currentTimerIndex]--;
-                    if (remainingTimes[currentTimerIndex] <= 0) {
-                        playBeep(1.0);
-                        currentTimerIndex++;
-                        if (currentTimerIndex >= timers.length) {
-                            currentTimerIndex = 0;
-                            currentLoop++;
-                            if (currentLoop >= totalLoops) {
-                                clearInterval(intervalId);
-                                isRunning = false;
-                                document.getElementById('active-label').textContent = 'Done!';
-                                document.getElementById('active-time').textContent = '00:00';
-                                document.getElementById('active-loop').textContent = '';
-                                document.getElementById('status').textContent = 'All loops completed!';
-                                return;
-                            }
-                            remainingTimes = [...timers];
-                        }
-                    } else if (remainingTimes[currentTimerIndex] <= 4) {
-                        playBeep(0.2);
-                    }
-                    updateTimersList();
-                }, 1000);
+                intervalId = setInterval(tick, 1000);
                 return;
             }
             
@@ -507,44 +483,46 @@ Features:
             document.getElementById('status').textContent = '';
             updateTimersList();
             
-            intervalId = setInterval(() => {
-                if (isPaused) return;
-                
-                // Decrement current timer
-                remainingTimes[currentTimerIndex]--;
-                
-                // Check if time is up for current timer
-                if (remainingTimes[currentTimerIndex] <= 0) {
-                    playBeep(1.0); // Long beep for time up
-                    
-                    // Move to next timer
-                    currentTimerIndex++;
-                    
-                    // Check if all timers in current loop are done
-                    if (currentTimerIndex >= timers.length) {
-                        currentTimerIndex = 0;
-                        currentLoop++;
-                        
-                        // Check if all loops are done
-                        if (currentLoop >= totalLoops) {
-                            clearInterval(intervalId);
-                            isRunning = false;
-                            document.getElementById('active-label').textContent = 'Done!';
-                            document.getElementById('active-time').textContent = '00:00';
-                            document.getElementById('active-loop').textContent = '';
-                            document.getElementById('status').textContent = 'All loops completed!';
-                            return;
-                        }
-                        
-                        // Reset remaining times for next loop
-                        remainingTimes = [...timers];
+            intervalId = setInterval(tick, 1000);
+        }
+
+        // One tick of the countdown (called every second)
+        function tick() {
+            if (isPaused) return;
+
+            // Decrement first, then evaluate the new value.
+            // Beep timing:
+            //   remainingTime becomes 4,3,2,1 → short beep  (display changes 5→4, 4→3, 3→2, 2→1)
+            //   remainingTime becomes 0        → long beep   (display changes 1→0)
+            remainingTimes[currentTimerIndex]--;
+
+            if (remainingTimes[currentTimerIndex] <= 0) {
+                playBeep(1.0); // Long beep: timer finished (1→0)
+
+                currentTimerIndex++;
+
+                if (currentTimerIndex >= timers.length) {
+                    currentTimerIndex = 0;
+                    currentLoop++;
+
+                    if (currentLoop >= totalLoops) {
+                        clearInterval(intervalId);
+                        isRunning = false;
+                        document.getElementById('active-label').textContent = 'Done!';
+                        document.getElementById('active-time').textContent = '00:00';
+                        document.getElementById('active-loop').textContent = '';
+                        document.getElementById('status').textContent = 'All loops completed!';
+                        return;
                     }
-                } else if (remainingTimes[currentTimerIndex] <= 4) {
-                    playBeep(0.2); // Short beep for last 5 seconds (beeps at 4,3,2,1)
+
+                    remainingTimes = [...timers];
                 }
-                
-                updateTimersList();
-            }, 1000);
+            } else if (remainingTimes[currentTimerIndex] <= 4) {
+                // Short beep when display ticks 5→4, 4→3, 3→2, 2→1
+                playBeep(0.2);
+            }
+
+            updateTimersList();
         }
 
         // Pause the timers
