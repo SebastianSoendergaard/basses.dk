@@ -215,6 +215,10 @@ Features:
             color: #e0e0e0;
             border-color: #555;
         }
+        .timer-item input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .timer-item .time-display {
             font-size: 1.2rem;
             font-weight: bold;
@@ -442,12 +446,12 @@ Features:
                 input.type = 'number';
                 input.min = '1';
                 input.value = time;
+                input.disabled = isRunning;
                 input.addEventListener('change', () => {
                     const newTime = parseInt(input.value) || 1;
                     timers[index] = newTime;
-                    if (!isRunning) {
-                        remainingTimes[index] = newTime;
-                    }
+                    remainingTimes[index] = newTime;
+                    updateHeroDisplay();
                 });
                 
                 const removeBtn = document.createElement('button');
