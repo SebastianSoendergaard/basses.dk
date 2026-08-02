@@ -51,22 +51,11 @@ Features:
             max-width: 600px;
             margin: 0 auto;
             min-height: 100vh;
-            position: relative;
             transition: background-color 0.3s;
         }
         body.dark .container { background-color: #2a2a2a; }
 
-        /* Top-right toggles */
-        .top-toggles {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            z-index: 10;
-        }
+        /* Top-right toggles — removed, now inline with loops row */
         .toggle-row {
             display: flex;
             align-items: center;
@@ -158,13 +147,7 @@ Features:
             color: #e0e0e0;
             border-color: #555;
         }
-        .add-row {
-            display: flex;
-            gap: 8px;
-        }
-        .add-row input {
-            flex: 1;
-        }
+        /* .add-row removed — Add Timer button is now in the controls row */
 
         button {
             padding: 12px 18px;
@@ -274,24 +257,6 @@ Features:
 </head>
 <body>
     <div class="container">
-        <!-- Top-right toggles -->
-        <div class="top-toggles">
-            <div class="toggle-row" id="wake-lock-row" style="display:none;">
-                <span>📺</span>
-                <label class="switch" title="Keep screen on">
-                    <input type="checkbox" id="wake-lock-toggle" onchange="setWakeLockEnabled(this.checked)">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-row">
-                <span>🌙</span>
-                <label class="switch" title="Dark mode">
-                    <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode(this.checked)">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-
         <h1>Sequential Timer</h1>
 
         <!-- Active countdown hero display -->
@@ -299,14 +264,6 @@ Features:
             <div class="active-label" id="active-label">Ready</div>
             <div class="active-time" id="active-time">--:--</div>
             <div class="active-loop" id="active-loop"></div>
-        </div>
-        
-        <div class="input-group">
-            <label for="new-timer">Add New Timer (seconds):</label>
-            <div class="add-row">
-                <input type="number" id="new-timer" min="1" value="10">
-                <button class="btn-add" onclick="addTimer()">Add Timer</button>
-            </div>
         </div>
         
         <div class="input-group loops-control">
@@ -322,6 +279,7 @@ Features:
             <button class="btn-start" onclick="startTimers()">Start</button>
             <button class="btn-pause" onclick="pauseTimers()">Pause</button>
             <button class="btn-reset" onclick="resetTimers()">Reset</button>
+            <button class="btn-add" onclick="addTimer()">+ Add</button>
         </div>
         
         <div class="status" id="status"></div>
@@ -407,21 +365,11 @@ Features:
             });
         }
 
-        // Add a new timer
+        // Add a new timer (always 10 seconds default)
         function addTimer() {
-            const input = document.getElementById('new-timer');
-            const time = parseInt(input.value) || 10;
-            
-            if (time <= 0) {
-                alert('Please enter a valid time (greater than 0)');
-                return;
-            }
-            
-            timers.push(time);
-            remainingTimes.push(time);
-            
+            timers.push(10);
+            remainingTimes.push(10);
             updateTimersList();
-            input.value = '10';
         }
 
         // Remove a timer
