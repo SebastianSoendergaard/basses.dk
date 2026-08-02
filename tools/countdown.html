@@ -453,6 +453,7 @@ Features:
                     const newTime = parseInt(input.value) || 1;
                     timers[index] = newTime;
                     remainingTimes[index] = newTime;
+                    timeDisplay.textContent = formatTime(newTime);
                     updateHeroDisplay();
                 });
 
