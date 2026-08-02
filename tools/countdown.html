@@ -200,6 +200,17 @@ Features:
             background-color: #333;
             border-color: #555;
         }
+        .timer-item .input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .timer-item .input-wrap .sec-label {
+            font-size: 0.85rem;
+            color: #888;
+            white-space: nowrap;
+        }
+        body.dark .timer-item .input-wrap .sec-label { color: #777; }
         .timer-item input {
             width: 72px;
             padding: 8px 6px;
@@ -442,6 +453,9 @@ Features:
                     timeDisplay.classList.add('active');
                 }
                 
+                const inputWrap = document.createElement('div');
+                inputWrap.className = 'input-wrap';
+
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.min = '1';
@@ -453,6 +467,13 @@ Features:
                     remainingTimes[index] = newTime;
                     updateHeroDisplay();
                 });
+
+                const secLabel = document.createElement('span');
+                secLabel.className = 'sec-label';
+                secLabel.textContent = 'sec';
+
+                inputWrap.appendChild(input);
+                inputWrap.appendChild(secLabel);
                 
                 const removeBtn = document.createElement('button');
                 removeBtn.textContent = 'Remove';
@@ -465,7 +486,7 @@ Features:
                 removeBtn.style.minHeight = '48px';
                 removeBtn.onclick = () => removeTimer(index);
                 
-                timerItem.appendChild(input);
+                timerItem.appendChild(inputWrap);
                 timerItem.appendChild(timeDisplay);
                 timerItem.appendChild(removeBtn);
                 
