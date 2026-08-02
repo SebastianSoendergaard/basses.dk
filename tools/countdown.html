@@ -1,16 +1,19 @@
 <!-- 
 Description: Timer(s) that counts down from the given time in seconds. This can be used in many scenarios e.g. when doing exercises.
 Features:
-- Additional timers can be added and removed to make a series of different countdowns, e.g. exercises + breaks
-- The timers perform the countdown one after another
-- Countdown is done for every second
-- The list of timers can be repeated the given number of times
-- When each timer reaches 5 seconds it will make a beep for each remaining second
-- When timer finishes it will make a longer beep
-- When the full exercise (last timer in last loop) is done, a 3-tone ascending fanfare plays
-- Mobile-first layout with a large dominant active countdown display
-- Dark mode support with OS detection and manual toggle
-- Keep screen on support via Wake Lock API
+- Additional timers can be added (always 10 sec default) and removed to make a series of different countdowns, e.g. exercises + breaks
+- Each timer's duration can be edited directly in the list; updates take effect immediately on confirm (blur/Enter)
+- Timer inputs are disabled while the countdown is running or paused
+- The timers run one after another; the active timer is shown in a large hero display
+- The timer list with remaining times stays visible below the hero display during countdown
+- The list of timers can be repeated a configurable number of times (loops)
+- When each timer reaches 5 seconds it beeps on each tick: display changes 5→4, 4→3, 3→2, 2→1
+- When a timer finishes (1→0) it plays a long beep
+- When the full exercise (last timer in last loop) finishes, a 3-tone ascending fanfare plays
+- Mobile-first layout optimised for phone use: full-width, touch-friendly buttons (min 48px)
+- Dark mode with automatic OS/browser detection and a manual toggle switch
+- Keep screen on mode via the Wake Lock API (toggle hidden if browser does not support it)
+- Loops count, dark mode toggle, and keep-screen-on toggle share a single compact row
 -->
 
 <!DOCTYPE html>
