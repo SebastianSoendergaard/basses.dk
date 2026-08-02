@@ -562,15 +562,7 @@ Features:
             remainingTimes[currentTimerIndex]--;
 
             if (remainingTimes[currentTimerIndex] <= 0) {
-                // Check whether this is the very last timer in the very last loop
-                const isLastTimer = (currentTimerIndex === timers.length - 1);
-                const isLastLoop  = (currentLoop === totalLoops - 1);
-
-                if (isLastTimer && isLastLoop) {
-                    playCompletionFanfare(); // 3 ascending beeps: full exercise done
-                } else {
-                    playBeep(1.0); // Long beep: individual timer finished (1→0)
-                }
+                playBeep(1.0); // Long beep always plays when a timer finishes (1→0)
 
                 currentTimerIndex++;
 
@@ -586,11 +578,21 @@ Features:
                         document.getElementById('active-loop').textContent = '';
                         document.getElementById('status').textContent = 'All loops completed!';
                         releaseWakeLock();
+                        // Delay fanfare until long beep is over
+                        setTimeout(playCompletionFanfare, 1000);
                         return;
                     }
 
                     remainingTimes = [...timers];
                 }
+
+                // Delay start of next timer until long beep is over
+                clearInterval(intervalId);
+                setTimeout(() => {
+                    if (isRunning && !isPaused) {
+                        intervalId = setInterval(tick, 1000);
+                    }
+                }, 1000);
             } else if (remainingTimes[currentTimerIndex] <= 4) {
                 // Short beep when display ticks 5→4, 4→3, 3→2, 2→1
                 playBeep(0.2);
