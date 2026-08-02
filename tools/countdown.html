@@ -261,6 +261,13 @@ Features:
     <div class="container">
         <!-- Top-right toggles -->
         <div class="top-toggles">
+            <div class="toggle-row" id="wake-lock-row" style="display:none;">
+                <span>📺</span>
+                <label class="switch" title="Keep screen on">
+                    <input type="checkbox" id="wake-lock-toggle" onchange="setWakeLockEnabled(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
             <div class="toggle-row">
                 <span>🌙</span>
                 <label class="switch" title="Dark mode">
@@ -315,7 +322,30 @@ Features:
         let intervalId = null;
         let remainingTimes = [];
         let audioCtx = null;
-        let beepSound = null;
+
+        // --- Wake Lock ---
+        let wakeLockEnabled = false;
+        let wakeLockSentinel = null;
+
+        function setWakeLockEnabled(enabled) {
+            wakeLockEnabled = enabled;
+            if (!enabled) releaseWakeLock();
+        }
+
+        async function acquireWakeLock() {
+            if (!wakeLockEnabled || wakeLockSentinel) return;
+            try {
+                wakeLockSentinel = await navigator.wakeLock.request('screen');
+                wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+            } catch (_) { /* permission denied or unsupported */ }
+        }
+
+        async function releaseWakeLock() {
+            if (wakeLockSentinel) {
+                await wakeLockSentinel.release();
+                wakeLockSentinel = null;
+            }
+        }
 
         // Initialize audio context for beeps
         function initAudio() {
@@ -486,6 +516,7 @@ Features:
             if (isPaused) {
                 isPaused = false;
                 document.getElementById('status').textContent = '';
+                acquireWakeLock();
                 intervalId = setInterval(tick, 1000);
                 return;
             }
@@ -502,7 +533,7 @@ Features:
             
             document.getElementById('status').textContent = '';
             updateTimersList();
-            
+            acquireWakeLock();
             intervalId = setInterval(tick, 1000);
         }
 
@@ -540,6 +571,7 @@ Features:
                         document.getElementById('active-time').textContent = '00:00';
                         document.getElementById('active-loop').textContent = '';
                         document.getElementById('status').textContent = 'All loops completed!';
+                        releaseWakeLock();
                         return;
                     }
 
@@ -559,6 +591,7 @@ Features:
             
             isPaused = true;
             clearInterval(intervalId);
+            releaseWakeLock();
             document.getElementById('status').textContent = 'Paused';
         }
 
@@ -570,6 +603,7 @@ Features:
             currentTimerIndex = 0;
             currentLoop = 0;
             remainingTimes = [...timers];
+            releaseWakeLock();
             document.getElementById('status').textContent = '';
             updateTimersList();
         }
@@ -581,6 +615,11 @@ Features:
 
         // Initialize with one timer
         window.onload = function() {
+            // Show wake lock toggle only if the API is supported
+            if ('wakeLock' in navigator) {
+                document.getElementById('wake-lock-row').style.display = 'flex';
+            }
+
             // Detect OS dark mode preference
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.body.classList.add('dark');
