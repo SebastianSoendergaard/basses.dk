@@ -342,6 +342,26 @@ Features:
             oscillator.stop(audioCtx.currentTime + duration);
         }
 
+        // Play 3 ascending beeps to signal full exercise completion
+        function playCompletionFanfare() {
+            if (!audioCtx) initAudio();
+            const frequencies = [500, 700, 950];
+            const beepDuration = 0.18;
+            const gap = 0.28; // seconds between beep starts
+            frequencies.forEach((freq, i) => {
+                const osc  = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0.12;
+                const start = audioCtx.currentTime + i * gap;
+                osc.start(start);
+                osc.stop(start + beepDuration);
+            });
+        }
+
         // Add a new timer
         function addTimer() {
             const input = document.getElementById('new-timer');
@@ -497,7 +517,15 @@ Features:
             remainingTimes[currentTimerIndex]--;
 
             if (remainingTimes[currentTimerIndex] <= 0) {
-                playBeep(1.0); // Long beep: timer finished (1→0)
+                // Check whether this is the very last timer in the very last loop
+                const isLastTimer = (currentTimerIndex === timers.length - 1);
+                const isLastLoop  = (currentLoop === totalLoops - 1);
+
+                if (isLastTimer && isLastLoop) {
+                    playCompletionFanfare(); // 3 ascending beeps: full exercise done
+                } else {
+                    playBeep(1.0); // Long beep: individual timer finished (1→0)
+                }
 
                 currentTimerIndex++;
 
