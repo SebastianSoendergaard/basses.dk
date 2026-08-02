@@ -236,6 +236,23 @@ Features:
 
         .loops-control { margin-top: 14px; }
 
+        .loops-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .loops-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+        .loops-input-wrap input[type="number"] {
+            width: 64px;
+            padding: 10px 8px;
+            flex: none;
+        }
+
         .status {
             margin-top: 14px;
             text-align: center;
@@ -267,8 +284,26 @@ Features:
         </div>
         
         <div class="input-group loops-control">
-            <label for="loops">Number of Loops:</label>
-            <input type="number" id="loops" min="1" value="1">
+            <div class="loops-row">
+                <div class="loops-input-wrap">
+                    <input type="number" id="loops" min="1" value="1">
+                    <span class="sec-label">loops</span>
+                </div>
+                <div class="toggle-row">
+                    <span title="Dark mode">🌙</span>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row" id="wake-lock-row" style="display:none;">
+                    <span title="Keep screen on">📺</span>
+                    <label class="switch">
+                        <input type="checkbox" id="wake-lock-toggle" onchange="setWakeLockEnabled(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
         </div>
         
         <div class="timers-list" id="timers-list">
