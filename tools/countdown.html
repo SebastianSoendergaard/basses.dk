@@ -426,6 +426,8 @@ Features:
         function updateTimersList() {
             const list = document.getElementById('timers-list');
             list.innerHTML = '';
+
+            document.getElementById('loops').disabled = isRunning || isPaused;
             
             timers.forEach((time, index) => {
                 const timerItem = document.createElement('div');
@@ -446,7 +448,7 @@ Features:
                 input.type = 'number';
                 input.min = '1';
                 input.value = time;
-                input.disabled = isRunning;
+                input.disabled = isRunning || isPaused;
                 input.addEventListener('change', () => {
                     const newTime = parseInt(input.value) || 1;
                     timers[index] = newTime;
