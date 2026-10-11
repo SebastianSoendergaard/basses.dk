@@ -119,6 +119,115 @@
             border-radius: 6px;
         }
 
+        .export-folder-browser-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .export-folder-browser-overlay.visible {
+            display: flex;
+        }
+
+        .export-folder-browser-modal {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            width: 480px;
+            max-width: 90vw;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .export-folder-browser-modal h2 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .export-folder-browser-path {
+            font-size: 0.85rem;
+            color: #34495e;
+            background: #f4f6f7;
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            word-break: break-all;
+        }
+
+        .export-folder-browser-list {
+            border: 1px solid #dfe4e8;
+            border-radius: 6px;
+            height: 260px;
+            overflow-y: auto;
+        }
+
+        .export-folder-browser-item {
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .export-folder-browser-item:hover {
+            background: #eaf4fc;
+        }
+
+        .export-folder-browser-up {
+            font-weight: 600;
+            color: #2980b9;
+        }
+
+        .export-folder-browser-error {
+            color: #c0392b;
+            font-size: 0.85rem;
+            min-height: 1em;
+        }
+
+        .export-folder-browser-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .export-folder-browser-actions button {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #exportFolderBrowserCancel,
+        .export-format-modal [data-action="cancel"] {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        #exportFolderBrowserSelect,
+        .export-format-modal [data-action="export"] {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            color: white;
+        }
+
+        #exportFolderBrowserSelect:disabled,
+        .export-format-modal [data-action="export"]:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .export-format-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; z-index: 10000; }
+        .export-format-overlay.visible { display: flex; }
+        .export-format-modal { background: white; border-radius: 10px; padding: 1.25rem 1.5rem; width: 480px; max-width: 90vw; box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 0.75rem; }
+        .export-format-modal h2 { font-size: 1.1rem; color: #2c3e50; }
+        .export-format-modal label, .export-format-options label { cursor: pointer; }
+        .export-format-hint, #exportFormatHint { color: #8a5a00; font-size: 0.85rem; }
+        .export-format-options { display: flex; gap: 0.5rem; flex-direction: column; border: 1px solid #dfe4e8; border-radius: 6px; padding: 0.6rem; }
+        .export-format-options legend { color: #2c3e50; font-weight: 600; padding: 0 0.25rem; }
+
         .checkbox-group {
             display: flex;
             gap: 1.5rem;
@@ -231,6 +340,11 @@
         }
 
         .format-picker-choice:hover {
+            border-color: #3498db;
+            background: #eaf4fc;
+        }
+
+        .format-picker-choice.selected {
             border-color: #3498db;
             background: #eaf4fc;
         }
@@ -626,6 +740,55 @@
         /* Add spacing before undo/redo buttons */
         #codeUndoBtn, #treeUndoBtn {
             margin-left: 8px;
+        }
+
+        .format-conversion {
+            position: relative;
+        }
+
+        .code-toolbar .format-conversion-button {
+            margin-left: 8px;
+        }
+
+        .format-conversion-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .format-conversion-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            z-index: 1001;
+            min-width: 140px;
+            padding: 4px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .format-conversion-menu button {
+            width: 100%;
+            height: auto;
+            justify-content: flex-start;
+            padding: 6px 8px;
+            background: transparent;
+            border: 0;
+            border-radius: 3px;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .format-conversion-menu button:hover:not(:disabled) {
+            background: #f0f0f0;
+            border-color: transparent;
+        }
+
+        .format-conversion-status {
+            margin-left: 0.5rem;
+            color: #a12622;
+            font-size: 12px;
         }
 
         #codeEditorTextarea {
@@ -1047,9 +1210,9 @@
             z-index: 10;
             background: transparent;
             min-width: var(--swimlane-label-width);
-            padding: 12px 16px;
+            padding: 16px 16px 8px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             font-weight: 600;
             font-size: 25px;
@@ -1892,7 +2055,7 @@
             <div class="logo-block view"></div>
         </div>
         <h1>Event Model Viewer</h1>
-        <span class="build-number" title="Build number">Build 2026091216</span>
+        <span class="build-number" title="Build number">Build 2026101121</span>
 <button class="help-btn" id="helpBtn" title="Help" aria-label="Open help" aria-expanded="false">?</button>
     </header>
 
@@ -1938,11 +2101,31 @@
                 </div>
                 <div class="editor-view active" id="codeView">
                     <div class="code-toolbar">
-                        <button class="code-collapse-btn" id="codeCollapseBtn" title="Collapse all">▼</button>
-                        <button class="code-expand-btn" id="codeExpandBtn" title="Expand all">▶</button>
+                        <button class="code-collapse-btn" id="codeCollapseBtn" title="Collapse to top level">▼</button>
+                        <button class="code-expand-btn" id="codeExpandBtn" title="Expand next level">▶</button>
                         <button id="codeUndoBtn" title="Undo (Ctrl+Z)" disabled>↶</button>
                         <button id="codeRedoBtn" title="Redo (Ctrl+Y)" disabled>↷</button>
                         <button id="codeAddSliceBtn" title="Add new slice">+</button>
+                        <div class="format-conversion">
+                            <button id="formatConversionBtn" class="format-conversion-button" type="button"
+                                    title="Convert document format" aria-label="Convert document format"
+                                    aria-haspopup="menu" aria-expanded="false" aria-controls="formatConversionMenu">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M4 7h13l-3-3m3 3-3 3M20 17H7l3 3m-3-3 3-3"
+                                          fill="none" stroke="currentColor" stroke-width="2"
+                                          stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <div id="formatConversionMenu" class="format-conversion-menu" role="menu"
+                                 aria-label="Convert document format" hidden>
+                                <button id="convertJsonToYamlBtn" type="button" role="menuitem"
+                                        data-target-format="yaml" disabled>json -> yaml</button>
+                                <button id="convertYamlToJsonBtn" type="button" role="menuitem"
+                                        data-target-format="json" disabled>yaml -> json</button>
+                            </div>
+                        </div>
+                        <span id="formatConversionStatus" class="format-conversion-status"
+                              role="status" aria-live="polite" hidden></span>
                     </div>
                     <div id="codeEditor">
                         <div style="color: #999; padding: 1rem;">Loading code editor...</div>
@@ -1950,8 +2133,8 @@
                 </div>
                 <div class="editor-view" id="treeView">
                     <div class="tree-toolbar">
-                        <button id="treeCollapseAllBtn" title="Collapse all nodes">▼</button>
-                        <button id="treeExpandAllBtn" title="Expand all nodes">▶</button>
+                        <button id="treeCollapseAllBtn" title="Collapse to top level">▼</button>
+                        <button id="treeExpandAllBtn" title="Expand next level">▶</button>
                         <button id="treeUndoBtn" title="Undo (Ctrl+Z)" disabled>↶</button>
                         <button id="treeRedoBtn" title="Redo (Ctrl+Y)" disabled>↷</button>
                         <button id="treeAddSliceBtn" title="Add new slice">+</button>
@@ -2026,7 +2209,7 @@
 
         <section class="help-section">
             <h3>Tool Features</h3>
-            <p>Open and save <code>.emj</code> and <code>.emy</code> files locally.</br>Edit the model using the code or tree view.</br>Export slices as task files.</br>Export to PNG/SVG.</br>Quickly show or hide slices/tests/types/swimlanes.</br>Zoom and pan diagrams using the zoom buttons or C + mouse wheel.</br>Adjust the editor/viewer ratio using the collapse/expand buttons or the panel splitter.</p>
+            <p>Open and save <code>.emj</code> and <code>.emy</code> files locally.</br>Edit the model using the code or tree view.</br>Export slices as task files.</br>Export to PNG/SVG.</br>Quickly show or hide slices/tests/types/swimlanes.</br>Zoom and pan diagrams using the zoom buttons or C + mouse wheel. Filters, zoom, and diagram position are remembered per file.</br>Adjust the editor/viewer ratio using the collapse/expand buttons or the panel splitter.</p>
         </section>
 
         <section class="help-section">
@@ -2114,7 +2297,7 @@ trigger types:
         <section class="help-section">
             <h3>About</h3>
             <p>99% wibe coded with love <strong>&hearts;</strong></p>
-            <p>Build <strong>2026091216</strong></p>
+            <p>Build <strong>2026101121</strong></p>
             <p><a href="https://github.com/SebastianSoendergaard/EventModelViewer" target="_blank" rel="noopener noreferrer">GitHub repository</a></p>
         </section>
     </div>
@@ -2140,6 +2323,18 @@ trigger types:
         </div>
         <div class="add-slice-menu-item" data-action="event-slice">
             <span>Event in empty slice</span>
+        </div>
+        <div class="add-slice-menu-item" data-action="command-pattern">
+            <span>Command Pattern</span>
+        </div>
+        <div class="add-slice-menu-item" data-action="view-pattern">
+            <span>View Pattern</span>
+        </div>
+        <div class="add-slice-menu-item" data-action="automation-pattern">
+            <span>Automation Pattern</span>
+        </div>
+        <div class="add-slice-menu-item" data-action="translation-pattern">
+            <span>Translation Pattern</span>
         </div>
     </div>
 
@@ -2206,9 +2401,29 @@ trigger types:
             // Payload: { json, source }  — source: 'code' | 'tree' | 'history' | 'addslice'
             JSON_CHANGED:   'json:changed',
 
+            // An explicit request to convert the active document's text encoding.
+            // Payload: FORMAT_CONVERSION_REQUESTED { targetFormat }
+            //         FORMAT_CONVERSION_READY { json, sourceFormat, targetFormat }
+            //         FORMAT_CONVERSION_FAILED { message }
+            FORMAT_CONVERSION_REQUESTED: 'format:conversion-requested',
+            FORMAT_CONVERSION_READY:     'format:conversion-ready',
+            FORMAT_CONVERSION_FAILED:    'format:conversion-failed',
+
             // A filter checkbox was toggled.
             // Payload: { type, checked }  — type: 'slices' | 'tests' | 'types' | 'swimlanes'
             FILTER_TOGGLED: 'filter:toggled',
+
+            // The active file's presentation preferences were loaded.
+            // Payload: { state, hasSavedState }
+            PRESENTATION_STATE_LOADED: 'presentation-state:loaded',
+
+            // The active file's zoom or pan changed.
+            // Payload: { zoom, scrollLeft, scrollTop }
+            PRESENTATION_STATE_CHANGED: 'presentation-state:changed',
+
+            // The standalone document acquired a filename after being saved.
+            // Payload: { identity }
+            PRESENTATION_IDENTITY_CHANGED: 'presentation-identity:changed',
 
             // The editor panel was resized; ACE editor should call .resize().
             // Payload: {}
@@ -2303,6 +2518,169 @@ trigger types:
         };
 
 (function() {
+(function() {
+    const STORAGE_KEY = 'eventModelViewerPresentationState';
+    const FILTER_NAMES = ['slices', 'tests', 'types', 'swimlanes'];
+    const DEFAULT_FILTERS = {
+        slices: true,
+        tests: true,
+        types: true,
+        swimlanes: true
+    };
+
+    let fileStates = readFileStates();
+    let currentKey = null;
+    let currentState = createDefaultState();
+    let persistTimer = null;
+
+    function createDefaultState() {
+        return {
+            filters: { ...DEFAULT_FILTERS },
+            zoom: null,
+            scrollLeft: 0,
+            scrollTop: 0
+        };
+    }
+
+    function copyState(state) {
+        return {
+            filters: { ...state.filters },
+            zoom: state.zoom,
+            scrollLeft: state.scrollLeft,
+            scrollTop: state.scrollTop
+        };
+    }
+
+    function normalizeState(value) {
+        const state = createDefaultState();
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return state;
+
+        if (value.filters && typeof value.filters === 'object') {
+            FILTER_NAMES.forEach(name => {
+                if (typeof value.filters[name] === 'boolean') {
+                    state.filters[name] = value.filters[name];
+                }
+            });
+        }
+
+        if (Number.isFinite(value.zoom) && value.zoom > 0 && value.zoom <= 5) {
+            state.zoom = value.zoom;
+        }
+        if (Number.isFinite(value.scrollLeft) && value.scrollLeft >= 0) {
+            state.scrollLeft = value.scrollLeft;
+        }
+        if (Number.isFinite(value.scrollTop) && value.scrollTop >= 0) {
+            state.scrollTop = value.scrollTop;
+        }
+
+        return state;
+    }
+
+    function readFileStates() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return {};
+
+            const parsed = JSON.parse(saved);
+            if (parsed?.version !== 1 || !parsed.files || typeof parsed.files !== 'object' || Array.isArray(parsed.files)) {
+                console.warn('[presentation-state] Stored presentation state has an unsupported format.');
+                return {};
+            }
+            return parsed.files;
+        } catch (error) {
+            console.warn('[presentation-state] Failed to read saved presentation state:', error);
+            return {};
+        }
+    }
+
+    function keyForIdentity(identity) {
+        if (!identity || typeof identity !== 'object') return null;
+
+        if (identity.type === 'standalone' && typeof identity.fileName === 'string' && identity.fileName.length > 0) {
+            return JSON.stringify(['standalone', identity.fileName]);
+        }
+
+        if (identity.type === 'server' &&
+            typeof identity.root === 'string' && identity.root.length > 0 &&
+            typeof identity.path === 'string' && identity.path.length > 0) {
+            const root = identity.root.replace(/[\\/]+$/, '');
+            const path = identity.path.replace(/\\/g, '/');
+            return JSON.stringify(['server', root, path]);
+        }
+
+        return null;
+    }
+
+    function persistCurrentState() {
+        if (!currentKey) return;
+
+        fileStates[currentKey] = copyState(currentState);
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                version: 1,
+                files: fileStates
+            }));
+        } catch (error) {
+            console.warn('[presentation-state] Failed to save presentation state:', error);
+        }
+    }
+
+    function flushPendingPersist() {
+        if (persistTimer !== null) {
+            clearTimeout(persistTimer);
+            persistTimer = null;
+            persistCurrentState();
+        }
+    }
+
+    function schedulePersist() {
+        if (!currentKey) return;
+        if (persistTimer !== null) clearTimeout(persistTimer);
+        persistTimer = setTimeout(() => {
+            persistTimer = null;
+            persistCurrentState();
+        }, 100);
+    }
+
+    EventBus.on(Events.FILE_LOADED, payload => {
+        flushPendingPersist();
+        currentKey = keyForIdentity(payload?.presentationIdentity);
+
+        const hasSavedState = !!currentKey && Object.prototype.hasOwnProperty.call(fileStates, currentKey);
+        currentState = hasSavedState
+            ? normalizeState(fileStates[currentKey])
+            : createDefaultState();
+
+        EventBus.emit(Events.PRESENTATION_STATE_LOADED, {
+            state: copyState(currentState),
+            hasSavedState
+        });
+    });
+
+    EventBus.on(Events.PRESENTATION_IDENTITY_CHANGED, ({ identity }) => {
+        flushPendingPersist();
+        currentKey = keyForIdentity(identity);
+        persistCurrentState();
+    });
+
+    EventBus.on(Events.FILTER_TOGGLED, ({ type, checked }) => {
+        if (!FILTER_NAMES.includes(type) || typeof checked !== 'boolean') return;
+        currentState.filters[type] = checked;
+        schedulePersist();
+    });
+
+    EventBus.on(Events.PRESENTATION_STATE_CHANGED, ({ zoom, scrollLeft, scrollTop }) => {
+        if (Number.isFinite(zoom) && zoom > 0 && zoom <= 5) currentState.zoom = zoom;
+        if (Number.isFinite(scrollLeft) && scrollLeft >= 0) currentState.scrollLeft = scrollLeft;
+        if (Number.isFinite(scrollTop) && scrollTop >= 0) currentState.scrollTop = scrollTop;
+        schedulePersist();
+    });
+
+    window.addEventListener('beforeunload', flushPendingPersist);
+})();
+})();
+
+(function() {
         // Toolbar shell — sub-module JS handles all behaviour
 })();
 
@@ -2329,6 +2707,41 @@ trigger types:
             _currentJson = json;
             _currentFileName = name;
             _currentFormat = format || Codec.formatForFileName(name);
+            _saveJsonToLocalStorage(json, _currentFileName, _currentFormat);
+        });
+
+        EventBus.on(Events.FORMAT_CONVERSION_READY, ({ json, sourceFormat, targetFormat }) => {
+            if (_currentJson === null || sourceFormat !== _currentFormat || targetFormat === sourceFormat) {
+                EventBus.emit(Events.FORMAT_CONVERSION_FAILED, {
+                    message: 'The active document changed before conversion could complete.'
+                });
+                return;
+            }
+
+            const convertedFileName = _currentFileName
+                ? _currentFileName.replace(/\.(emj|emy)$/i, `.${Codec.extensionFor(targetFormat)}`)
+                : null;
+
+            _currentJson = json;
+            _currentFileName = convertedFileName;
+            _currentFormat = targetFormat;
+
+            if (_currentFileName) {
+                fileName.textContent = _currentFileName;
+            }
+
+            const identity = _currentFileName
+                ? { type: 'standalone', fileName: _currentFileName }
+                : null;
+            EventBus.emit(Events.FILE_LOADED, {
+                json,
+                fileName: _currentFileName,
+                format: _currentFormat,
+                presentationIdentity: identity
+            });
+            if (identity) {
+                EventBus.emit(Events.PRESENTATION_IDENTITY_CHANGED, { identity });
+            }
         });
 
         // Self-initialize when app is ready
@@ -2348,6 +2761,8 @@ trigger types:
                 localStorage.setItem('eventModelJson', jsonString);
                 if (name) {
                     localStorage.setItem('eventModelFileName', name);
+                } else {
+                    localStorage.removeItem('eventModelFileName');
                 }
                 localStorage.setItem('eventModelFormat', format || Codec.JSON);
                 console.log('JSON auto-saved to localStorage');
@@ -2372,7 +2787,14 @@ trigger types:
                     const displayName = savedFileName || 'Restored from previous session';
                     fileName.textContent = displayName;
 
-                    EventBus.emit(Events.FILE_LOADED, { json, fileName: savedFileName || null, format: savedFormat });
+                    EventBus.emit(Events.FILE_LOADED, {
+                        json,
+                        fileName: savedFileName || null,
+                        format: savedFormat,
+                        presentationIdentity: savedFileName
+                            ? { type: 'standalone', fileName: savedFileName }
+                            : null
+                    });
                     
                     console.log('JSON loaded from localStorage');
                     return true;
@@ -2409,7 +2831,11 @@ trigger types:
             fileInput.value = '';
             fileName.textContent = 'No file selected';
             
-            EventBus.emit(Events.FILE_LOADED, { json: null, fileName: null, format: _currentFormat });
+            EventBus.emit(Events.FILE_LOADED, {
+                json: { title: '', slices: [] },
+                fileName: null,
+                format: _currentFormat
+            });
             
             console.log('New document created (.' + Codec.extensionFor(_currentFormat) + ')');
         }
@@ -2445,6 +2871,15 @@ trigger types:
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+
+            if (_currentFileName !== fname) {
+                _currentFileName = fname;
+                fileName.textContent = fname;
+                _saveJsonToLocalStorage(_currentJson, _currentFileName, _currentFormat);
+                EventBus.emit(Events.PRESENTATION_IDENTITY_CHANGED, {
+                    identity: { type: 'standalone', fileName: fname }
+                });
+            }
             
             console.log('File saved as:', fname);
         }
@@ -2476,7 +2911,12 @@ trigger types:
                         const json = Codec.parse(fileContent, _currentFormat);
                         console.log('Content parsed successfully, keys:', Object.keys(json));
                         
-                        EventBus.emit(Events.FILE_LOADED, { json, fileName: file.name, format: _currentFormat });
+                        EventBus.emit(Events.FILE_LOADED, {
+                            json,
+                            fileName: file.name,
+                            format: _currentFormat,
+                            presentationIdentity: { type: 'standalone', fileName: file.name }
+                        });
                         
                         console.log('File loaded via EventBus');
                     } catch (error) {
@@ -2536,12 +2976,27 @@ trigger types:
         // versioned — it's for humans/agents to read, not to parse structurally.
         var TASK_JSON_SCHEMA_VERSION = 1;
 
-        function sanitizeSliceName(name) {
-            return (name || '')
+        function sanitizeFileNamePart(name, fallback) {
+            return (typeof name === 'string' ? name : '')
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/^-+|-+$/g, '')
-                .substring(0, 50) || 'slice';
+                .substring(0, 50) || fallback;
+        }
+
+        function sanitizeSliceName(name) {
+            return sanitizeFileNamePart(name, 'slice');
+        }
+
+        function getModelFilePrefix(model, fileName) {
+            var name = '';
+            if (typeof fileName === 'string' && fileName.trim()) {
+                name = fileName.split(/[\\/]/).pop()
+                    .replace(/\.(?:emj|emy)$/i, '');
+            } else if (model && typeof model.title === 'string') {
+                name = model.title;
+            }
+            return sanitizeFileNamePart(name, 'event-model');
         }
 
         function padOrder(n, width) {
@@ -2563,7 +3018,7 @@ trigger types:
          * *different* single entry in their `events`/`views` reference array —
          * those reference arrays are unioned across fragments too, not just
          * overwritten by the first fragment, so no dependency is silently dropped.
-         * Preserves order of first appearance (used later for file numbering).
+         * Preserves order of first appearance for task and manifest ordering.
          */
         function unionRefs(existing, incoming) {
             var result = (existing || []).slice();
@@ -2595,15 +3050,56 @@ trigger types:
         }
 
         function deduplicateSlices(slices) {
+            // Match by ID or exact name so duplicate slices with distinct IDs merge.
+            var sliceList = slices || [];
+            var parent = sliceList.map(function(_, index) {
+                return index;
+            });
+            var firstById = new Map();
+            var firstByName = new Map();
+
+            function findRoot(index) {
+                if (parent[index] !== index) {
+                    parent[index] = findRoot(parent[index]);
+                }
+                return parent[index];
+            }
+
+            function mergeRoots(first, second) {
+                var firstRoot = findRoot(first);
+                var secondRoot = findRoot(second);
+                if (firstRoot !== secondRoot) {
+                    var root = Math.min(firstRoot, secondRoot);
+                    parent[Math.max(firstRoot, secondRoot)] = root;
+                }
+            }
+
+            sliceList.forEach(function(slice, index) {
+                if (slice.id) {
+                    if (firstById.has(slice.id)) {
+                        mergeRoots(index, firstById.get(slice.id));
+                    } else {
+                        firstById.set(slice.id, index);
+                    }
+                }
+                if (typeof slice.name === 'string' && slice.name.length > 0) {
+                    if (firstByName.has(slice.name)) {
+                        mergeRoots(index, firstByName.get(slice.name));
+                    } else {
+                        firstByName.set(slice.name, index);
+                    }
+                }
+            });
+
             var order = [];
             var byKey = new Map();
 
-            (slices || []).forEach(function(slice, index) {
-                var key = slice.id || ('__slice_' + index);
+            sliceList.forEach(function(slice, index) {
+                var key = findRoot(index);
                 var merged = byKey.get(key);
                 if (!merged) {
                     merged = {
-                        id: slice.id || key,
+                        id: slice.id || ('__slice_' + index),
                         name: slice.name || '',
                         border: slice.border || '',
                         background: slice.background || '',
@@ -2622,7 +3118,12 @@ trigger types:
                     if (!Object.prototype.hasOwnProperty.call(merged, 'hints')) merged.hints = [];
                     merged.hints = mergeHints(merged.hints, slice.hints);
                 }
-                if (!merged.name && slice.name) merged.name = slice.name;
+                var mergedNameIsBlank = typeof merged.name !== 'string' || !merged.name.trim();
+                var sliceNameIsPresent = typeof slice.name === 'string' &&
+                    slice.name.trim().length > 0;
+                if (mergedNameIsBlank && sliceNameIsPresent) {
+                    merged.name = slice.name;
+                }
                 if (!merged.border && slice.border) merged.border = slice.border;
                 if (!merged.background && slice.background) merged.background = slice.background;
                 addNotePart(merged.noteParts, slice.note);
@@ -3053,27 +3554,40 @@ trigger types:
         }
 
         /**
-         * Main entry point: turns an enriched event model (from MODEL_CHANGED) into
-         * the full list of files to write — index.md + index.json plus, per
-         * deduplicated slice in order, a paired NNN-slicename.md (for humans/agents
-         * to read) and NNN-slicename.json (same information, structured for a
-         * code-gen tool to consume).
+         * Main entry point: turns an enriched event model into model-prefixed
+         * index files and, per titled deduplicated slice, a paired Markdown/JSON
+         * task file.
          */
-        function generateExportFiles(model) {
-            var dedupedSlices = deduplicateSlices(model.slices);
+        function generateExportFiles(model, modelFileName) {
+            var dedupedSlices = deduplicateSlices(model.slices).filter(function(slice) {
+                return typeof slice.name === 'string' && slice.name.trim().length > 0;
+            });
+            var modelPrefix = getModelFilePrefix(model, modelFileName);
             var globalMaps = buildGlobalMaps(dedupedSlices);
             var width = Math.max(3, String(dedupedSlices.length).length);
             var files = [];
             var indexEntries = [];
+            var indexFileNameMd = modelPrefix + '-index.md';
+            var indexFileNameJson = modelPrefix + '-index.json';
+            var fileNames = new Set([indexFileNameMd, indexFileNameJson]);
 
             dedupedSlices.forEach(function(slice, i) {
                 var order = i + 1;
                 var orderStr = padOrder(order, width);
                 var pattern = classifySlicePattern(slice);
                 var deps = computeDependencies(slice, globalMaps);
-                var baseName = orderStr + '-' + sanitizeSliceName(slice.name);
+                var baseName = modelPrefix + '-' + sanitizeSliceName(slice.name);
                 var fileNameMd = baseName + '.md';
                 var fileNameJson = baseName + '.json';
+
+                if (fileNames.has(fileNameMd) || fileNames.has(fileNameJson)) {
+                    throw new Error(
+                        'Export filename collision: ' + fileNameMd +
+                        '. Rename the slices to produce unique filenames.'
+                    );
+                }
+                fileNames.add(fileNameMd);
+                fileNames.add(fileNameJson);
 
                 files.push({ name: fileNameMd, content: buildSliceMarkdown(orderStr, slice, pattern, deps) });
 
@@ -3087,10 +3601,30 @@ trigger types:
                 });
             });
 
-            files.unshift({ name: 'index.json', content: JSON.stringify(buildIndexJson(model.title, indexEntries), null, 2) + '\n' });
-            files.unshift({ name: 'index.md', content: buildIndexMarkdown(model.title, indexEntries.map(function(e) {
-                return { order: e.orderStr, fileName: e.fileNameMd, name: e.name, pattern: e.pattern, state: e.state, background: e.background };
-            })) });
+            files.unshift({
+                name: indexFileNameJson,
+                content: JSON.stringify(
+                    buildIndexJson(model.title, indexEntries),
+                    null,
+                    2
+                ) + '\n'
+            });
+            files.unshift({
+                name: indexFileNameMd,
+                content: buildIndexMarkdown(
+                    model.title,
+                    indexEntries.map(function(e) {
+                        return {
+                            order: e.orderStr,
+                            fileName: e.fileNameMd,
+                            name: e.name,
+                            pattern: e.pattern,
+                            state: e.state,
+                            background: e.background
+                        };
+                    })
+                )
+            });
             return files;
         }
 
@@ -3109,6 +3643,13 @@ trigger types:
         // Standalone delivery for the shared task export capability.
 
         var _currentModel = null;
+        var _currentFileName = null;
+
+        EventBus.on(Events.FILE_LOADED, function(payload) {
+            _currentFileName = payload && typeof payload.fileName === 'string'
+                ? payload.fileName
+                : null;
+        });
 
         EventBus.on(Events.MODEL_CHANGED, function(payload) {
             _currentModel = payload ? payload.model : null;
@@ -3141,6 +3682,8 @@ trigger types:
             }
         }
 
+        var FORMAT_PREF_KEY = 'exportTaskFormats';
+        function chooseFormats() { return new Promise(function(resolve) { var saved; try { saved=JSON.parse(localStorage.getItem(FORMAT_PREF_KEY))||{}; } catch(e) { saved={}; } var overlay=document.createElement('div'); overlay.className='export-format-overlay visible'; overlay.innerHTML='<div class="export-format-modal" role="dialog" aria-labelledby="exportFormatTitle"><h2 id="exportFormatTitle">Export as Tasks</h2><fieldset class="export-format-options"><legend>Select output formats:</legend><label><input type="checkbox" data-format="markdown"> Markdown (.md)</label><label><input type="checkbox" data-format="json"> JSON (.json)</label></fieldset><div class="export-format-hint" aria-live="polite">Select at least one format.</div><div class="export-folder-browser-actions"><button data-action="cancel">Cancel</button><button data-action="export" disabled>Export</button></div></div>'; document.body.appendChild(overlay); var boxes=overlay.querySelectorAll('input'); boxes[0].checked=!!saved.markdown; boxes[1].checked=!!saved.json; var action=overlay.querySelector('[data-action=export]'),hint=overlay.querySelector('.export-format-hint'); function update(){var v={markdown:boxes[0].checked,json:boxes[1].checked};localStorage.setItem(FORMAT_PREF_KEY,JSON.stringify(v));action.disabled=!(v.markdown||v.json);hint.hidden=!action.disabled;} boxes.forEach(function(b){b.addEventListener('change',update);});update(); overlay.querySelector('[data-action=cancel]').onclick=function(){overlay.remove();resolve(null);};action.onclick=function(){var v={markdown:boxes[0].checked,json:boxes[1].checked};overlay.remove();resolve(v);}; }); }
         var exportTasksBtn = document.getElementById('exportTasksBtn');
 
         exportTasksBtn.addEventListener('click', async function() {
@@ -3148,10 +3691,14 @@ trigger types:
                 alert('No event model loaded to export.');
                 return;
             }
-
+            var formats = await chooseFormats();
+            if (!formats) return;
             var files;
             try {
-                files = EventModelTaskExport.generateExportFiles(_currentModel);
+                files = EventModelTaskExport.generateExportFiles(
+                    _currentModel,
+                    _currentFileName
+                ).filter(function(file) { return formats.markdown && file.name.endsWith('.md') || formats.json && file.name.endsWith('.json'); });
             } catch (error) {
                 alert('Error exporting: ' + error.message);
                 return;
@@ -3187,6 +3734,13 @@ trigger types:
         const showTestsCheckbox = document.getElementById('showTests');
         const showTypesCheckbox = document.getElementById('showTypes');
         const showSwimlanesCheckbox = document.getElementById('showSwimlanes');
+
+        EventBus.on(Events.PRESENTATION_STATE_LOADED, ({ state }) => {
+            showSlicesCheckbox.checked = state.filters.slices;
+            showTestsCheckbox.checked = state.filters.tests;
+            showTypesCheckbox.checked = state.filters.types;
+            showSwimlanesCheckbox.checked = state.filters.swimlanes;
+        });
 
         showSlicesCheckbox.addEventListener('change', () => {
             EventBus.emit(Events.FILTER_TOGGLED, { type: 'slices', checked: showSlicesCheckbox.checked });
@@ -3286,7 +3840,7 @@ trigger types:
             }
         });
 
-        // window.FormatPicker.prompt({ askName, title, defaultName })
+        // window.FormatPicker.prompt({ askName, title, defaultName, defaultFormat })
         //   -> Promise<{ name?, format, extension } | null>  (null when cancelled)
         window.FormatPicker = {
             prompt(options = {}) {
@@ -3295,6 +3849,10 @@ trigger types:
                 formatPickerNameRow.style.display = _askName ? '' : 'none';
                 formatPickerNameInput.value = options.defaultName || '';
                 formatPickerErrorEl.textContent = '';
+                formatPickerJsonBtn.classList.toggle('selected', options.defaultFormat === Codec.JSON);
+                formatPickerYamlBtn.classList.toggle('selected', options.defaultFormat === Codec.YAML);
+                formatPickerJsonBtn.setAttribute('aria-pressed', String(options.defaultFormat === Codec.JSON));
+                formatPickerYamlBtn.setAttribute('aria-pressed', String(options.defaultFormat === Codec.YAML));
                 formatPickerOverlay.classList.add('visible');
                 if (_askName) setTimeout(() => formatPickerNameInput.focus(), 0);
                 return new Promise((resolve) => { _resolvePrompt = resolve; });
@@ -3313,6 +3871,8 @@ trigger types:
         let debounceTimer;
         // CodeMirror editor instance
         let codeEditorView = null;
+        let previousFolds = new Set();
+        let isProcessingFolds = false;
 
         // Local JSON state
         let _codeViewJson = null;
@@ -3322,6 +3882,30 @@ trigger types:
         // don't carry a filename, so they keep using whatever was last resolved here.
         let _currentFormat = Codec.JSON;
 
+        function updateFormatConversionOptions() {
+            const hasDocument = _codeViewJson !== null;
+            const jsonToYaml = document.getElementById('convertJsonToYamlBtn');
+            const yamlToJson = document.getElementById('convertYamlToJsonBtn');
+            if (!jsonToYaml || !yamlToJson) return;
+
+            jsonToYaml.disabled = !hasDocument || _currentFormat !== Codec.JSON;
+            yamlToJson.disabled = !hasDocument || _currentFormat !== Codec.YAML;
+        }
+
+        function showFormatConversionError(message) {
+            const status = document.getElementById('formatConversionStatus');
+            if (!status) return;
+            status.textContent = message;
+            status.hidden = false;
+        }
+
+        function clearFormatConversionError() {
+            const status = document.getElementById('formatConversionStatus');
+            if (!status) return;
+            status.textContent = '';
+            status.hidden = true;
+        }
+
         // Subscribe to events
         EventBus.on(Events.FILE_LOADED, ({ json, fileName, format }) => {
             _codeViewJson = json;
@@ -3329,6 +3913,8 @@ trigger types:
             // explicit `format` chosen via the New-document format picker.
             _currentFormat = format || Codec.formatForFileName(fileName);
             collapsedLines.clear();
+            updateFormatConversionOptions();
+            clearFormatConversionError();
             if (codeEditorView && codeEditorView.setValue) {
                 codeEditorView.session.setMode(Codec.aceMode(_currentFormat));
                 codeEditorView.setValue(json ? Codec.stringify(json, _currentFormat) : '', -1);
@@ -3338,9 +3924,33 @@ trigger types:
         EventBus.on(Events.JSON_CHANGED, ({ json, source }) => {
             if (source === 'code') return; // Don't update from our own edits
             _codeViewJson = json;
+            updateFormatConversionOptions();
             if (codeEditorView && codeEditorView.setValue) {
                 codeEditorView.setValue(Codec.stringify(json, _currentFormat), -1);
             }
+        });
+
+        EventBus.on(Events.FORMAT_CONVERSION_REQUESTED, ({ targetFormat }) => {
+            const expectedTarget = _currentFormat === Codec.JSON ? Codec.YAML : Codec.JSON;
+            if (!_codeViewJson || !codeEditorView || targetFormat !== expectedTarget) {
+                showFormatConversionError('No active document is available to convert.');
+                return;
+            }
+
+            try {
+                const json = Codec.parse(codeEditorView.getValue(), _currentFormat);
+                EventBus.emit(Events.FORMAT_CONVERSION_READY, {
+                    json,
+                    sourceFormat: _currentFormat,
+                    targetFormat
+                });
+            } catch (error) {
+                showFormatConversionError(`Could not convert document: ${error.message}`);
+            }
+        });
+
+        EventBus.on(Events.FORMAT_CONVERSION_FAILED, ({ message }) => {
+            showFormatConversionError(message);
         });
 
         EventBus.on(Events.EDITOR_RESIZED, () => {
@@ -3624,8 +4234,8 @@ trigger types:
                 editor.setOption('foldStyle', 'markbegin');
                 
                 // Track previous fold state for detecting expansions
-                let previousFolds = new Set();
-                let isProcessingFolds = false; // Prevent recursive processing
+                previousFolds = new Set();
+                isProcessingFolds = false;
                 
                 // Update fold placeholders after they're created
                 editor.session.on('changeFold', function() {
@@ -3652,69 +4262,45 @@ trigger types:
                         }
                     });
                     
-                    // For each expanded section, fold all its direct children
+                    // Reopening a section shows its direct children but keeps their contents folded.
                     if (expandedRows.length > 0) {
                         isProcessingFolds = true; // Set flag before folding
-                        
-                        expandedRows.forEach(row => {
-                            console.log(`Row ${row} was expanded, folding children...`);
-                            
-                            // Find the matching bracket for this row
-                            const line = editor.session.getLine(row);
-                            const trimmed = line.trimStart();
-                            
-                            // Determine the closing bracket
-                            let openChar, closeChar;
-                            if (trimmed.includes('{')) {
-                                openChar = '{';
-                                closeChar = '}';
-                            } else if (trimmed.includes('[')) {
-                                openChar = '[';
-                                closeChar = ']';
-                            } else {
-                                return;
-                            }
-                            
-                            // Find end of this block
-                            let depth = 0;
-                            let endRow = row;
-                            for (let i = row; i < editor.session.getLength(); i++) {
-                                const lineText = editor.session.getLine(i);
-                                for (let char of lineText) {
-                                    if (char === openChar) depth++;
-                                    if (char === closeChar) depth--;
-                                    if (depth === 0 && i > row) {
-                                        endRow = i;
-                                        break;
+                        try {
+                            expandedRows.forEach(row => {
+                                const parentLine = editor.session.getLine(row);
+                                const parentIndent = parentLine.length - parentLine.trimStart().length;
+                                const parentRange = editor.session.getFoldWidgetRange(row);
+                                if (!parentRange) return;
+
+                                const childFolds = [];
+                                for (let i = row + 1; i <= parentRange.end.row; i++) {
+                                    const line = editor.session.getLine(i);
+                                    const indent = line.length - line.trimStart().length;
+                                    const range = editor.session.getFoldWidgetRange(i);
+                                    if (range && indent > parentIndent) {
+                                        childFolds.push({ row: i, indent, range });
                                     }
                                 }
-                                if (depth === 0 && i > row) break;
-                            }
-                            
-                            // Now fold all foldable lines within this range (children)
-                            for (let i = row + 1; i < endRow; i++) {
-                                const childLine = editor.session.getLine(i);
-                                // Check if this line can be folded (has { or [)
-                                if (childLine.includes('{') || childLine.includes('[')) {
-                                    // Try to fold it
-                                    try {
-                                        const range = editor.session.getFoldWidgetRange(i);
-                                        if (range && !editor.session.getFoldAt(i)) {
-                                            editor.session.addFold('...', range);
+
+                                const directChildIndent = childFolds.reduce(
+                                    (minimum, fold) => Math.min(minimum, fold.indent),
+                                    Infinity
+                                );
+                                childFolds
+                                    .filter(fold => fold.indent === directChildIndent)
+                                    .forEach(fold => {
+                                        if (!editor.session.getFoldAt(fold.row)) {
+                                            editor.session.addFold('...', fold.range);
                                         }
-                                    } catch (e) {
-                                        // Ignore fold errors
-                                    }
-                                }
-                            }
-                        });
-                        
-                        // Update previousFolds AFTER all child folding is done
-                        const allFoldsAfter = editor.session.getAllFolds();
-                        previousFolds = new Set();
-                        allFoldsAfter.forEach(fold => previousFolds.add(fold.start.row));
-                        
-                        isProcessingFolds = false; // Clear flag after folding
+                                    });
+                            });
+                        } finally {
+                            isProcessingFolds = false;
+                        }
+
+                        previousFolds = new Set(
+                            editor.session.getAllFolds().map(fold => fold.start.row)
+                        );
                     } else {
                         // No expansions, just update previous state
                         previousFolds = currentFolds;
@@ -3747,6 +4333,7 @@ trigger types:
                     
                     // Force re-render
                     editor.renderer.updateFull();
+                    updateCollapseExpandButtonState();
                 });
                 
                 // Store editor instance globally
@@ -3856,7 +4443,7 @@ trigger types:
                 toggle.addEventListener('click', (e) => {
                     const lineIndex = parseInt(e.target.getAttribute('data-line'));
                     if (collapsedLines.has(lineIndex)) {
-                        // Expanding: remove this line from collapsed, but add all child collapsible lines
+                        // Reopening resets descendants so only direct children are shown.
                         collapsedLines.delete(lineIndex);
                         
                         // Find all collapsible children and collapse them
@@ -3897,50 +4484,112 @@ trigger types:
         }
 
         // Collapse/Expand All functionality
-        function collapseAll() {
-            // Check which tab is active
-            const codeTabActive = codeView.classList.contains('active');
-            
-            if (codeTabActive && codeEditorView) {
-                // Use ACE folding API
-                const session = codeEditorView.session;
-                const foldWidgets = session.foldWidgets;
-                if (foldWidgets) {
-                    for (let row = 0; row < session.getLength(); row++) {
-                        if (session.foldWidgets[row] != null) {
-                            session.foldAll(row, row, 0);
-                        }
-                    }
-                }
-            } else {
-                // Use old custom editor for tree tab
-                jsonLines.forEach((line, index) => {
-                    if (line.isCollapsible) {
-                        collapsedLines.add(index);
-                    }
-                });
-                updateCollapseExpandButtonState();
-                renderCodeEditor();
-            }
+        function isAceRootContainerRow(session, row) {
+            if (_currentFormat === 'yaml' || row !== 0) return false;
+            const line = session.getLine(row).trimStart();
+            return line.startsWith('{') || line.startsWith('[');
         }
 
-        function expandAll() {
+        function collapseToTopLevel() {
             // Check which tab is active
             const codeTabActive = codeView.classList.contains('active');
             
             if (codeTabActive && codeEditorView) {
                 // Use ACE folding API
                 const session = codeEditorView.session;
-                session.unfold();
+                isProcessingFolds = true;
+                try {
+                    session.unfold();
+                } finally {
+                    isProcessingFolds = false;
+                }
+                previousFolds = new Set();
+
+                const foldableRanges = [];
+                let topLevelIndent = Infinity;
+                for (let row = 0; row < session.getLength(); row++) {
+                    const range = session.getFoldWidgetRange(row);
+                    if (range && !isAceRootContainerRow(session, row)) {
+                        const line = session.getLine(row);
+                        const indent = line.length - line.trimStart().length;
+                        foldableRanges.push({ row, indent, range });
+                        topLevelIndent = Math.min(topLevelIndent, indent);
+                    }
+                }
+                foldableRanges
+                    .filter(({ indent }) => indent === topLevelIndent)
+                    .forEach(({ range }) => {
+                        session.addFold('...', range);
+                });
+                previousFolds = new Set(
+                    session.getAllFolds().map(fold => fold.start.row)
+                );
             } else {
                 // Use old custom editor for tree tab
                 collapsedLines.clear();
-                updateCollapseExpandButtonState();
+                jsonLines.forEach((line, index) => {
+                    if (line.isCollapsible && line.indent > 0) {
+                        collapsedLines.add(index);
+                    }
+                });
                 renderCodeEditor();
             }
+            updateCollapseExpandButtonState();
+        }
+
+        function expandNextLevel() {
+            // Check which tab is active
+            const codeTabActive = codeView.classList.contains('active');
+            
+            if (codeTabActive && codeEditorView) {
+                // Use ACE folding API
+                const session = codeEditorView.session;
+                const folds = session.getAllFolds();
+                const visibleFolds = folds.filter(fold => !folds.some(other =>
+                    other !== fold &&
+                    other.start.row <= fold.start.row &&
+                    other.end.row >= fold.end.row &&
+                    (other.start.row < fold.start.row || other.end.row > fold.end.row)
+                ));
+
+                visibleFolds.forEach(fold => session.removeFold(fold));
+                previousFolds = new Set(
+                    session.getAllFolds().map(fold => fold.start.row)
+                );
+                codeEditorView.renderer.updateFull();
+            } else {
+                // Use old custom editor for tree tab
+                const visibleCollapsedLines = Array.from(
+                    codeEditor.querySelectorAll('.line-toggle:not(.empty)')
+                )
+                    .map(toggle => Number.parseInt(toggle.getAttribute('data-line'), 10))
+                    .filter(lineIndex => collapsedLines.has(lineIndex));
+
+                visibleCollapsedLines.forEach(lineIndex => collapsedLines.delete(lineIndex));
+                renderCodeEditor();
+            }
+            updateCollapseExpandButtonState();
         }
 
         function updateCollapseExpandButtonState() {
+            if (codeView.classList.contains('active') && codeEditorView) {
+                const session = codeEditorView.session;
+                const folds = session.getAllFolds();
+                const foldableRows = [];
+                for (let row = 0; row < session.getLength(); row++) {
+                    if (
+                        !isAceRootContainerRow(session, row) &&
+                        session.getFoldWidgetRange(row)
+                    ) {
+                        foldableRows.push(row);
+                    }
+                }
+
+                codeCollapseBtn.disabled = foldableRows.length === 0;
+                codeExpandBtn.disabled = folds.length === 0;
+                return;
+            }
+
             const totalCollapsible = jsonLines.filter(line => line.isCollapsible).length;
             
             if (collapsedLines.size === totalCollapsible && totalCollapsible > 0) {
@@ -4008,8 +4657,8 @@ trigger types:
         }
 
 
-        codeCollapseBtn.addEventListener('click', collapseAll);
-        codeExpandBtn.addEventListener('click', expandAll);
+        codeCollapseBtn.addEventListener('click', collapseToTopLevel);
+        codeExpandBtn.addEventListener('click', expandNextLevel);
 })();
 
 (function() {
@@ -4268,26 +4917,60 @@ trigger types:
         function toggleTreeNode(nodeId) {
             if (treeCollapsedNodes.has(nodeId)) {
                 treeCollapsedNodes.delete(nodeId);
+                const node = findTreeNodeById(treeData, nodeId);
+                if (node) {
+                    collapseTreeNodeDescendants(node);
+                }
             } else {
                 treeCollapsedNodes.add(nodeId);
             }
             renderTreeView();
         }
 
-        // Collapse all tree nodes
-        function collapseAllTreeNodes(node = treeData) {
-            if (!node) return;
-            if (node.children.length > 0) {
-                treeCollapsedNodes.add(node.id);
-                node.children.forEach(child => collapseAllTreeNodes(child));
+        function findTreeNodeById(node, nodeId) {
+            if (!node) return null;
+            if (node.id === nodeId) return node;
+
+            for (const child of node.children) {
+                const found = findTreeNodeById(child, nodeId);
+                if (found) return found;
             }
+            return null;
         }
 
-        // Expand all tree nodes
-        function expandAllTreeNodes(node = treeData) {
+        function collapseTreeNodeDescendants(node) {
+            node.children.forEach(child => {
+                if (child.children.length > 0) {
+                    treeCollapsedNodes.add(child.id);
+                }
+                collapseTreeNodeDescendants(child);
+            });
+        }
+
+        function collapseTreeToTopLevel() {
+            treeCollapsedNodes.clear();
+            if (!treeData) return;
+
+            treeData.children.forEach(node => {
+                if (node.children.length > 0) {
+                    treeCollapsedNodes.add(node.id);
+                }
+                collapseTreeNodeDescendants(node);
+            });
+        }
+
+        function expandTreeNodesOneLevel(node = treeData) {
             if (!node) return;
-            treeCollapsedNodes.delete(node.id);
-            node.children.forEach(child => expandAllTreeNodes(child));
+
+            node.children.forEach(child => {
+                if (child.children.length === 0) return;
+
+                if (treeCollapsedNodes.has(child.id)) {
+                    treeCollapsedNodes.delete(child.id);
+                } else {
+                    expandTreeNodesOneLevel(child);
+                }
+            });
         }
 
         // Find node by ID in tree
@@ -4845,12 +5528,12 @@ trigger types:
         const treeExpandAllBtn = document.getElementById('treeExpandAllBtn');
 
         treeCollapseAllBtn.addEventListener('click', () => {
-            collapseAllTreeNodes();
+            collapseTreeToTopLevel();
             renderTreeView();
         });
 
         treeExpandAllBtn.addEventListener('click', () => {
-            expandAllTreeNodes();
+            expandTreeNodesOneLevel();
             renderTreeView();
         });
 })();
@@ -5018,42 +5701,130 @@ trigger types:
         const treeAddSliceBtn = document.getElementById('treeAddSliceBtn');
         const addSliceContextMenu = document.getElementById('addSliceContextMenu');
 
+        const formatConversionBtn = document.getElementById('formatConversionBtn');
+        const formatConversionMenu = document.getElementById('formatConversionMenu');
+        const formatConversionOptions = formatConversionMenu.querySelectorAll('[data-target-format]');
+
+        function setFormatConversionMenuOpen(isOpen) {
+            formatConversionMenu.hidden = !isOpen;
+            formatConversionBtn.setAttribute('aria-expanded', String(isOpen));
+        }
+
+        formatConversionBtn.addEventListener('click', () => {
+            setFormatConversionMenuOpen(formatConversionMenu.hidden);
+        });
+
+        formatConversionOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                EventBus.emit(Events.FORMAT_CONVERSION_REQUESTED, {
+                    targetFormat: option.dataset.targetFormat
+                });
+                setFormatConversionMenuOpen(false);
+            });
+        });
+
+        document.addEventListener('click', event => {
+            if (!event.target.closest('.format-conversion')) {
+                setFormatConversionMenuOpen(false);
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !formatConversionMenu.hidden) {
+                setFormatConversionMenuOpen(false);
+                formatConversionBtn.focus();
+            }
+        });
+
+        function getUniqueSliceIdentity(elementSuffixes) {
+            const slices = Array.isArray(_editorJson?.slices) ? _editorJson.slices : [];
+            const existingNames = new Set(slices.map(slice => slice?.name).filter(name => typeof name === 'string'));
+            const existingIds = new Set();
+
+            for (const slice of slices) {
+                const elements = [slice, slice?.command, slice?.view, ...(Array.isArray(slice?.events) ? slice.events : [])];
+                for (const element of elements) {
+                    const id = typeof element?.id === 'string' && element.id ? element.id : element?.name;
+                    if (typeof id === 'string') {
+                        existingIds.add(id);
+                    }
+                }
+            }
+
+            for (let index = 1; ; index++) {
+                const name = index === 1 ? 'New Slice' : `New Slice ${index}`;
+                const id = name.toLowerCase().replace(/\s+/g, '-');
+                const nestedIds = elementSuffixes.map(suffix => `${id}-${suffix}`);
+
+                if (!existingNames.has(name) && !existingIds.has(id) && nestedIds.every(nestedId => !existingIds.has(nestedId))) {
+                    return { name, id };
+                }
+            }
+        }
+
         // Function to create a full slice template
         function createFullSliceTemplate() {
+            const { name, id } = getUniqueSliceIdentity(['command', 'event', 'view']);
+            const commandId = `${id}-command`;
+            const eventId = `${id}-event`;
+            const viewId = `${id}-view`;
+
             return {
-                "name": "New Slice",
+                "name": name,
+                "id": id,
                 "border": "#000000",
+                "background": "#f0f0f0",
+                "hotspots": ["The item appears in the cart after it is added."],
+                "hints": ["Publish Item added only after the cart update succeeds."],
                 "trigger": {
-                    "swimlane": "User",
-                    "type": "input-ui",
-                    "buttons": ["Action"]
-                },
-                "command": {
-                    "name": "New Command",
+                    "name": "Add item to cart",
+                    "type": "ui",
                     "properties": [
                         {
-                            "name": "Property",
+                            "name": "Cart ID",
+                            "value": "cart-123"
+                        }
+                    ],
+                    "swimlane": "User",
+                    "buttons": ["Add item"],
+                    "views": [viewId]
+                },
+                "note": "Adds one item to a cart.",
+                "command": {
+                    "name": "Add item",
+                    "id": commandId,
+                    "properties": [
+                        {
+                            "name": "Cart ID",
+                            "type": "string"
+                        },
+                        {
+                            "name": "Item ID",
                             "type": "string"
                         }
                     ],
-                    "events": ["New Event"]
+                    "events": [eventId]
                 },
                 "view": {
-                    "name": "New View",
+                    "name": "Cart items",
+                    "id": viewId,
                     "properties": [
                         {
-                            "name": "Property",
+                            "name": "Item ID",
                             "type": "string"
                         }
                     ],
-                    "events": ["New Event"]
+                    "events": [eventId]
                 },
                 "events": [
                     {
-                        "name": "New Event",
+                        "name": "Item added",
+                        "id": eventId,
+                        "swimlane": "Cart",
+                        "external": false,
                         "properties": [
                             {
-                                "name": "Property",
+                                "name": "Item ID",
                                 "type": "string"
                             }
                         ]
@@ -5061,16 +5832,59 @@ trigger types:
                 ],
                 "tests": [
                     {
-                        "name": "New Test",
-                        "given": [],
-                        "when": {
-                            "name": "New Command"
+                        "name": "Adding an item to a cart",
+                        "given": {
+                            "events": [
+                                {
+                                    "name": "Cart created",
+                                    "properties": [
+                                        {
+                                            "name": "Cart ID",
+                                            "value": "cart-123"
+                                        }
+                                    ]
+                                }
+                            ]
                         },
-                        "then": [
-                            {
-                                "name": "New Event"
+                        "when": {
+                            "command": {
+                                "name": "Add item",
+                                "properties": [
+                                    {
+                                        "name": "Cart ID",
+                                        "value": "cart-123"
+                                    },
+                                    {
+                                        "name": "Item ID",
+                                        "value": "item-456"
+                                    }
+                                ]
                             }
-                        ]
+                        },
+                        "then": {
+                            "events": [
+                                {
+                                    "name": "Item added",
+                                    "properties": [
+                                        {
+                                            "name": "Item ID",
+                                            "value": "item-456"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "views": [
+                                {
+                                    "name": "Cart items",
+                                    "properties": [
+                                        {
+                                            "name": "Item ID",
+                                            "value": "item-456"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 ]
             };
@@ -5092,6 +5906,111 @@ trigger types:
                     }
                 ]
             };
+        }
+
+        function createPatternEvent(name, id, external = false) {
+            return {
+                name,
+                id,
+                external,
+                properties: [
+                    {
+                        name: "Property",
+                        type: "string"
+                    }
+                ]
+            };
+        }
+
+        function createPatternTrigger(name, type, viewId) {
+            const trigger = { name, type };
+
+            if (type === 'ui') {
+                trigger.properties = [];
+                trigger.swimlane = 'User';
+                trigger.buttons = [];
+            }
+
+            if (viewId) {
+                trigger.views = [viewId];
+            }
+
+            return trigger;
+        }
+
+        function createPatternView(id, eventId) {
+            return {
+                name: "New View",
+                id,
+                properties: [],
+                events: [eventId]
+            };
+        }
+
+        function createCommandPatternTemplate() {
+            const { name, id } = getUniqueSliceIdentity(['command', 'event']);
+            const commandId = `${id}-command`;
+            const eventId = `${id}-event`;
+
+            return {
+                name,
+                id,
+                trigger: createPatternTrigger("UI Trigger", "ui"),
+                command: {
+                    name: "New Command",
+                    id: commandId,
+                    properties: [],
+                    events: [eventId]
+                },
+                events: [createPatternEvent("New Event", eventId)]
+            };
+        }
+
+        function createViewPatternTemplate() {
+            const { name, id } = getUniqueSliceIdentity(['event', 'view']);
+            const eventId = `${id}-event`;
+            const viewId = `${id}-view`;
+
+            return {
+                name,
+                id,
+                trigger: createPatternTrigger("Open View", "ui", viewId),
+                view: createPatternView(viewId, eventId),
+                events: [createPatternEvent("Input Event", eventId)]
+            };
+        }
+
+        function createViewBasedCommandPatternTemplate(triggerType, triggerName, inputIsExternal = false) {
+            const { name, id } = getUniqueSliceIdentity(['command', 'input-event', 'output-event', 'view']);
+            const commandId = `${id}-command`;
+            const inputEventId = `${id}-input-event`;
+            const outputEventId = `${id}-output-event`;
+            const viewId = `${id}-view`;
+
+            return {
+                name,
+                id,
+                trigger: createPatternTrigger(triggerName, triggerType, viewId),
+                command: {
+                    name: "New Command",
+                    id: commandId,
+                    properties: [],
+                    events: [outputEventId]
+                },
+                view: createPatternView(viewId, inputEventId),
+                events: [
+                    createPatternEvent("Input Event", inputEventId, inputIsExternal),
+                    createPatternEvent("Output Event", outputEventId)
+                ]
+            };
+        }
+
+        function createAutomationPatternTemplate() {
+            return createViewBasedCommandPatternTemplate("automation", "Automation Trigger");
+        }
+
+        function createTranslationPatternTemplate() {
+            return createViewBasedCommandPatternTemplate("translation", "Translation Trigger", true);
         }
 
         // Function to add a slice to the model
@@ -5144,6 +6063,14 @@ trigger types:
                 addSliceToModel(createFullSliceTemplate());
             } else if (action === 'event-slice') {
                 addSliceToModel(createEventOnlySliceTemplate());
+            } else if (action === 'command-pattern') {
+                addSliceToModel(createCommandPatternTemplate());
+            } else if (action === 'view-pattern') {
+                addSliceToModel(createViewPatternTemplate());
+            } else if (action === 'automation-pattern') {
+                addSliceToModel(createAutomationPatternTemplate());
+            } else if (action === 'translation-pattern') {
+                addSliceToModel(createTranslationPatternTemplate());
             }
             
             hideAddSliceMenu();
@@ -5580,6 +6507,10 @@ trigger types:
             }
         });
 
+        EventBus.on(Events.PRESENTATION_STATE_LOADED, ({ state }) => {
+            Object.assign(_filters, state.filters);
+        });
+
         EventBus.on(Events.FILTER_TOGGLED, ({ type, checked }) => {
             _filters[type] = checked;
             if (type === 'swimlanes') {
@@ -5587,11 +6518,13 @@ trigger types:
                 if (_model) renderDiagram(_model);
             } else if (type === 'slices') {
                 toggleSliceBorders(checked);
+                if (_model) drawAllArrows();
             } else if (type === 'tests') {
                 // Always re-render diagram when toggling tests to ensure arrows and layout are correct
                 if (_model) renderDiagram(_model);
             } else if (type === 'types') {
                 toggleTypes(checked);
+                if (_model) drawAllArrows();
             }
         });
 
@@ -5645,12 +6578,13 @@ trigger types:
             try {
                 const html = generateEventModelDiagram(model);
                 diagramElement.innerHTML = html;
-                drawAllArrows();
-                
+
                 // Apply current filter states
                 toggleSliceBorders(_filters.slices);
                 toggleTests(_filters.tests);
                 toggleTypes(_filters.types);
+
+                drawAllArrows();
             } catch (error) {
                 showError('Error rendering diagram: ' + error.message);
             }
@@ -6934,6 +7868,10 @@ trigger types:
         // Starts at a low fallback so zoom still behaves sanely before any diagram has
         // ever been measured.
         let minZoomFloor = 0.1;
+        let fitZoomFloor = 0.1;
+        let restoredZoomBelowFitFloor = false;
+        let pendingPresentationState = null;
+        let fileLoadGeneration = 0;
 
         // DOM references (defined here so this module is self-contained)
         const diagramWrapper = document.getElementById('diagramWrapper');
@@ -6992,11 +7930,24 @@ trigger types:
         }
 
         // Zoom functions
+        function emitPresentationStateChanged() {
+            EventBus.emit(Events.PRESENTATION_STATE_CHANGED, {
+                zoom: currentZoom,
+                scrollLeft: diagramContainer.scrollLeft,
+                scrollTop: diagramContainer.scrollTop
+            });
+        }
+
         function setZoom(zoom) {
             currentZoom = Math.min(Math.max(zoom, minZoomFloor), 5); // Clamp between the content-fit floor and 500%
+            if (restoredZoomBelowFitFloor && currentZoom >= fitZoomFloor) {
+                restoredZoomBelowFitFloor = false;
+                minZoomFloor = fitZoomFloor;
+            }
             diagramElement.style.transform = `scale(${currentZoom})`;
             zoomLevelDisplay.textContent = `${Math.round(currentZoom * 100)}%`;
             sizeWrapperToContent();
+            emitPresentationStateChanged();
         }
 
         // Changes zoom while keeping a specific point of the diagram content fixed
@@ -7018,6 +7969,7 @@ trigger types:
             // smaller than the viewport in a dimension (e.g. at the fit-zoom floor).
             diagramContainer.scrollLeft = contentX * currentZoom - viewportX;
             diagramContainer.scrollTop = contentY * currentZoom - viewportY;
+            emitPresentationStateChanged();
         }
 
         // Anchored on the center of the currently visible viewport area, so whatever
@@ -7036,7 +7988,11 @@ trigger types:
 
         function resetZoom() {
             const fit = computeFitZoom();
-            if (fit !== null) minZoomFloor = Math.min(fit, 5);
+            restoredZoomBelowFitFloor = false;
+            if (fit !== null) {
+                fitZoomFloor = Math.min(fit, 5);
+                minZoomFloor = fitZoomFloor;
+            }
             setZoom(fit !== null ? fit : 1);
         }
 
@@ -7050,11 +8006,22 @@ trigger types:
                 sizeWrapperToContent(); // placeholder/error — release explicit sizing
                 return;
             }
-            minZoomFloor = Math.min(fit, 5);
-            if (forceReset || currentZoom < minZoomFloor) {
-                setZoom(minZoomFloor);
+            fitZoomFloor = Math.min(fit, 5);
+            if (forceReset) {
+                restoredZoomBelowFitFloor = false;
+                minZoomFloor = fitZoomFloor;
+                setZoom(fitZoomFloor);
+            } else if (restoredZoomBelowFitFloor && currentZoom < fitZoomFloor) {
+                minZoomFloor = currentZoom;
+                sizeWrapperToContent();
             } else {
-                sizeWrapperToContent(); // zoom unchanged, but content size may have — re-measure
+                restoredZoomBelowFitFloor = false;
+                minZoomFloor = fitZoomFloor;
+                if (currentZoom < minZoomFloor) {
+                    setZoom(minZoomFloor);
+                } else {
+                    sizeWrapperToContent(); // zoom unchanged, but content size may have — re-measure
+                }
             }
         }
 
@@ -7075,12 +8042,32 @@ trigger types:
         });
         EventBus.on(Events.FILTER_TOGGLED, () => refreshFitZoom(false));
         EventBus.on(Events.EDITOR_RESIZED, () => refreshFitZoom(false));
+        EventBus.on(Events.PRESENTATION_STATE_LOADED, ({ state }) => {
+            pendingPresentationState = state;
+        });
         // ...or a fresh file is loaded, which should always reset the view to fit —
         // deferred to a fresh task so it runs after the MODEL_CHANGED render this
         // triggers (which may fire synchronously within the same FILE_LOADED emit)
         // has updated the diagram DOM, regardless of module registration order.
         EventBus.on(Events.FILE_LOADED, () => {
-            setTimeout(() => refreshFitZoom(true), 0);
+            restoredZoomBelowFitFloor = false;
+            const generation = ++fileLoadGeneration;
+            const presentationState = pendingPresentationState;
+            pendingPresentationState = null;
+            setTimeout(() => {
+                if (generation !== fileLoadGeneration) return;
+                refreshFitZoom(true);
+                if (presentationState) {
+                    if (Number.isFinite(presentationState.zoom) && presentationState.zoom > 0 && presentationState.zoom <= 5) {
+                        minZoomFloor = Math.min(fitZoomFloor, presentationState.zoom);
+                        restoredZoomBelowFitFloor = presentationState.zoom < fitZoomFloor;
+                        setZoom(presentationState.zoom);
+                    }
+                    diagramContainer.scrollLeft = presentationState.scrollLeft;
+                    diagramContainer.scrollTop = presentationState.scrollTop;
+                    emitPresentationStateChanged();
+                }
+            }, 0);
         });
         // ...or the viewport itself resizes (debounced to avoid thrashing mid-drag).
         let _fitZoomResizeDebounce = null;
@@ -7088,6 +8075,8 @@ trigger types:
             clearTimeout(_fitZoomResizeDebounce);
             _fitZoomResizeDebounce = setTimeout(() => refreshFitZoom(false), 150);
         });
+
+        diagramContainer.addEventListener('scroll', emitPresentationStateChanged);
 
         // Temporarily resets the diagram zoom to 100% so exports are always generated
         // from the unscaled layout, regardless of the on-screen viewing zoom. Bypasses
@@ -7109,6 +8098,20 @@ trigger types:
         }
 
         // Export functions
+        function removeFilteredDiagramElements(diagramElement) {
+            diagramElement.querySelectorAll('.tests-container.hidden').forEach(element => element.remove());
+
+            if (diagramElement.classList.contains('swimlanes-hidden')) {
+                diagramElement.querySelectorAll('.lane-header').forEach(element => element.remove());
+            }
+
+            diagramElement.querySelectorAll('.slice-border, .slice-background').forEach(element => {
+                if (element.style.display === 'none') {
+                    element.remove();
+                }
+            });
+        }
+
         async function exportToPNG() {
             const restoreZoom = withResetZoomForExport();
             try {
@@ -7129,6 +8132,11 @@ trigger types:
                     });
                 }
 
+                const inputStates = Array.from(
+                    diagramDiv.querySelectorAll('.trigger-input-field'),
+                    input => ({ value: input.value, scrollLeft: input.scrollLeft })
+                );
+
                 // Capture the diagram as canvas.
                 // Two html2canvas quirks are worked around in the cloned document it renders from
                 // (this does not touch the live page):
@@ -7145,6 +8153,93 @@ trigger types:
                     scale: 2, // Higher quality
                     logging: false,
                     onclone: (clonedDoc) => {
+                        const clonedInputs = clonedDoc.querySelectorAll('.trigger-input-field');
+                        if (clonedInputs.length !== inputStates.length) {
+                            throw new Error('Unable to prepare Diagram Image Export: input fields changed during capture.');
+                        }
+
+                        const inputStyleProperties = [
+                            'box-sizing',
+                            'padding-top',
+                            'padding-right',
+                            'padding-bottom',
+                            'padding-left',
+                            'margin-top',
+                            'margin-right',
+                            'margin-bottom',
+                            'margin-left',
+                            'border-top-width',
+                            'border-top-style',
+                            'border-top-color',
+                            'border-right-width',
+                            'border-right-style',
+                            'border-right-color',
+                            'border-bottom-width',
+                            'border-bottom-style',
+                            'border-bottom-color',
+                            'border-left-width',
+                            'border-left-style',
+                            'border-left-color',
+                            'border-top-left-radius',
+                            'border-top-right-radius',
+                            'border-bottom-right-radius',
+                            'border-bottom-left-radius',
+                            'background-color',
+                            'color',
+                            'font-family',
+                            'font-size',
+                            'font-style',
+                            'font-weight',
+                            'line-height',
+                            'letter-spacing',
+                            'text-align',
+                            'text-indent',
+                            'text-transform',
+                            'direction'
+                        ];
+
+                        clonedInputs.forEach((input, index) => {
+                            const inputState = inputStates[index];
+                            const computedStyle = clonedDoc.defaultView.getComputedStyle(input);
+                            const staticField = clonedDoc.createElement('div');
+                            staticField.className = 'trigger-input-field diagram-image-export-static-input';
+
+                            inputStyleProperties.forEach(property => {
+                                const value = computedStyle.getPropertyValue(property);
+                                if (value) staticField.style.setProperty(property, value);
+                            });
+
+                            const bounds = input.getBoundingClientRect();
+                            staticField.style.width = `${bounds.width}px`;
+                            staticField.style.height = `${bounds.height}px`;
+                            staticField.style.display = 'flex';
+                            staticField.style.alignItems = 'center';
+                            staticField.style.overflow = 'hidden';
+                            staticField.style.whiteSpace = 'nowrap';
+
+                            const viewport = clonedDoc.createElement('span');
+                            viewport.className = 'diagram-image-export-static-input__viewport';
+                            viewport.style.display = 'flex';
+                            viewport.style.alignItems = 'center';
+                            viewport.style.flex = '1 1 auto';
+                            viewport.style.minWidth = '0';
+                            viewport.style.overflow = 'hidden';
+                            viewport.style.whiteSpace = 'nowrap';
+
+                            const text = clonedDoc.createElement('span');
+                            text.className = 'diagram-image-export-static-input__text';
+                            text.textContent = inputState.value;
+                            text.style.display = 'block';
+                            text.style.flex = '0 0 auto';
+                            text.style.whiteSpace = 'pre';
+                            text.style.transform = `translateX(${-inputState.scrollLeft}px)`;
+
+                            viewport.appendChild(text);
+                            staticField.appendChild(viewport);
+                            input.replaceWith(staticField);
+                        });
+
+                        removeFilteredDiagramElements(clonedDoc.querySelector('.event-model-diagram'));
                         clonedDoc.querySelectorAll('.arrow-hitarea').forEach(el => el.remove());
                         const style = clonedDoc.createElement('style');
                         style.textContent = '* { box-shadow: none !important; }';
@@ -7182,6 +8277,8 @@ trigger types:
 
                 // Clone the diagram div
                 const clone = diagramDiv.cloneNode(true);
+
+                removeFilteredDiagramElements(clone);
 
                 // Remove invisible arrow hit-area paths — they exist only for mouse
                 // interaction and serve no purpose in a static export.
